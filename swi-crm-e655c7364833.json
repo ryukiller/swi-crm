@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "swi-crm",
+  "private_key_id": "e655c7364833895e43b11779290577332bbc956f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC5I+4EmJjQqN2j\n0v/eNvk3gvpLKi0cKBi5i+RM+CeUYhhl+ACH+Qaoa9Gdgcq3Vhp8ONMa+l76Bexp\nNoUk0bu89p/qd8E8kMTy8vjp6di+pFb2APhh+JE5r7fNFfO76HEiMBBtuj8Ute95\nzw12t8wAS0ANVFB4IQvF59xwNa7f0KIxhEyjq9QOeZ4Qieh0moonvzE1rHv5jcsK\nDPlzyhjvrtD3h7QU2Qyxrfi2Sec+rdasLQO/NvLhq/Rfj56TzvBPuGtMLHM6sUF3\nAtnWnRYGHkYT17BhnX23NEeaGvxNQx8+00JGuY5FxYMmHsWxRmmNSbcUQTFlBgbA\nxsNmhje3AgMBAAECggEABDkyxadV6JExEj8XWgm+Rb5H3PX2tr58nnBNBpo04XiB\nq4Mog2kH3J4uG5nUNqlVJayBg4tFN1L6qzi0m5WVHqL8+nMkDHSvhtMoD35BMtQl\nPoEUB1ZAp/4yj+Vu78zf0jkARVd35jBq166NEQskqKbKioErMF6g4n4c3r3D1VRV\nszj3JlGDrvR0JQJYH7Q/UhGg4KHN/wMSbbhBHRZmbMazyjpD0G5PIAP6h7es83Wo\na4zbUW+YhMfUMZSRZXyCFkiSCaB5WCVVyiDsV/gJFZDzhZCvaQTrFtY/cYSosIKh\njQYmE1CKshGt5Lpq+X8pjVT/oBmtw1NnScIl/MYIzQKBgQDnk+sIgXNeuflGa167\nFgIlyJYJ8z2BCtPkOKSBJpD8qUOenPSsU2G7K5humePGI1lZlhHWGj4KaZDPO3oG\n/QdCXh8DwStlsyrFHNSJsP6zpjmZNh40nbMw0kJ8N64p7T5MTHHT0wYgRgzuYbRn\n1+yC2OWoqsidakbYAmhc0dFePQKBgQDMqk3vDmAAZl8srAItoScsgzVdpPVtk4hY\nanK+cuuxj4T5IMviVhB6NGTF3FhcoJOqd7OvNO6HFkFHCyuzz3aX7iRSnOyxQP9q\nkrEIKWOwDTRER40sIpu2z1tlyqp/soQEbfojQJ5zqjYUNxVAZ9/AewZNP82uho8h\nzg2fOKFhAwKBgA0cBIwgt+U+5euknGI+5rQ43LWHfY3WjRQ4WKevBTooYtmRzRAM\nUFYGK8TnFUvcKGy34B6csbJpM3dnyIqovEZ3iY3u24QQVnV+IlIBIQoOeOhBdghI\nfSJgZL8fb86TzZkIItF4+rnM/WJpSYsvYAYwPSAFOwIeSBBmYn4OqqmJAoGAew+T\n2L/9/X+Qjp3GmYUituMV/X6ojAB/pRoscFNNYPB49gtATJGPSsuiJE5/WwK6h29+\nPUVIfzVkfsE6v91o46WvdXUh5Nq+OWiGxe+NH1hxKvUS74zHsD4yKJyZtDq0oq02\nEGhUXhvkdHdCcf2DTosqmNxaYixKd/sbubclYd0CgYBgmOl1CwWQyTbjR7axptHc\nJiLt/eskFsaeYkuV+RuZa98tH87MFmgX+dBxIB7lJ8rWgFPkmJUHE2en46anuw96\neP2a34LjkvTslSWeCw1vPNFyDywfBTO1GXRMTzm0avcGW7f0Gbqry+N+XkckgYJA\n8+iI+3hnZKZa2F3V1WxJwQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "swi-crm-app@swi-crm.iam.gserviceaccount.com",
+  "client_id": "111712486303929596572",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/swi-crm-app%40swi-crm.iam.gserviceaccount.com"
+}
