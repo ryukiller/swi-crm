@@ -190,11 +190,10 @@ const ComponentRenderer = ({ item, index, innerListItems, isEdit }) => {
           >
             {(provided, snapshot) => (
               <div
-                className={`w-2/12 p-[1px] min-h-[60px] rounded-sm space-y-2 border-[1px] border-dashed ${
-                  snapshot.isDraggingOver
-                    ? "border-blue-500"
-                    : "border-gray-300"
-                }`}
+                className={`w-2/12 p-[1px] min-h-[60px] rounded-sm space-y-2 border-[1px] border-dashed ${snapshot.isDraggingOver
+                  ? "border-blue-500"
+                  : "border-gray-300"
+                  }`}
                 ref={provided.innerRef}
                 {...provided.droppableProps}
               >
@@ -237,22 +236,7 @@ const ComponentRenderer = ({ item, index, innerListItems, isEdit }) => {
 };
 
 const reusableComponents = [
-  {
-    category: "Pagine",
-    pages: [
-      { id: "1", title: "BRAND IDENTITY & BRAND PROTECTION", items: [] },
-      { id: "2", title: "SITO WEB: SVILUPPO & ASSISTENZA TECNICA", items: [] },
-      {
-        id: "3",
-        title: "SEO",
-        subtitle: "Search Engine Optimization",
-        items: [],
-      },
-      { id: "4", title: "SEM", subtitle: "Search Engine Marketing", items: [] },
-      { id: "5", title: "DEM", subtitle: "Direct Email Marketing", items: [] },
-      { id: "6", title: "SOCIAL", subtitle: "NETWORK", items: [] },
-    ],
-  },
+
   {
     category: "Componenti Editor",
     components: [
@@ -342,17 +326,18 @@ const PageBuilder = ({ quote_id }) => {
 
   const [columns, setColumns] = useState({
     pages: [
-      { id: "1", title: "BRAND IDENTITY & BRAND PROTECTION", items: [] },
-      { id: "2", title: "SITO WEB: SVILUPPO & ASSISTENZA TECNICA", items: [] },
+      { id: "1", title: "BRAND IDENTITY & BRAND PROTECTION", items: [], state: 1, parents: [] },
+      { id: "2", title: "SITO WEB: SVILUPPO & ASSISTENZA TECNICA", items: [], state: 1, parents: [] },
       {
         id: "3",
         title: "SEO",
         subtitle: "Search Engine Optimization",
         items: [],
+        state: 1, parents: []
       },
-      { id: "4", title: "SEM", subtitle: "Search Engine Marketing", items: [] },
-      { id: "5", title: "DEM", subtitle: "Direct Email Marketing", items: [] },
-      { id: "6", title: "SOCIAL", subtitle: "NETWORK", items: [] },
+      { id: "4", title: "SEM", subtitle: "Search Engine Marketing", items: [], state: 1, parents: [] },
+      { id: "5", title: "DEM", subtitle: "Direct Email Marketing", items: [], state: 1, parents: [] },
+      { id: "6", title: "SOCIAL", subtitle: "NETWORK", items: [], state: 1, parents: [] },
     ],
     sidebar: {
       id: "sidebar",
@@ -842,27 +827,116 @@ const PageBuilder = ({ quote_id }) => {
     return null; // Or return a loading component, if you prefer
   }
 
+  const handleState = (pageId, newState) => {
+    setColumns((prevColumns) => {
+      const updatedPages = prevColumns.pages.map((page) => {
+        if (page.id === pageId) {
+          return { ...page, state: newState };
+        }
+        return page;
+      });
+
+      return { ...prevColumns, pages: updatedPages };
+    });
+  }
+
+
+
+  const handleParentPage = (pageId, parentPageId) => {
+    const updatedPages = columns.pages.map((page) => {
+      if (page.id === pageId) {
+        const updatedParents = page.parents.includes(parentPageId)
+          ? page.parents.filter((parentId) => parentId !== parentPageId)
+          : [...page.parents, parentPageId];
+        return { ...page, parents: updatedParents };
+      }
+      return page;
+    });
+
+    setColumns((prevColumns) => ({
+      ...prevColumns,
+      pages: updatedPages,
+    }));
+  };
+
+
   const Sidebar = () => {
+
+    const [selectedParents, setSelectedParents] = useState([]);
+
+    const handleParentSelection = (pageId) => {
+      setSelectedParents((prevSelectedParents) => {
+        if (prevSelectedParents.includes(pageId)) {
+          return prevSelectedParents.filter((id) => id !== pageId);
+        } else {
+          return [...prevSelectedParents, pageId];
+        }
+      });
+    };
+
     return (
       <nav className="-mx-3 space-y-6">
-        {reusableComponents.map((category) => (
-          <div key={category.category} className="space-y-3">
-            <label className="p-3 font-bold text-xs text-gray-500 uppercase dark:text-gray-400 bg-gray-200">
-              {category.category}
-            </label>
-            {category.pages &&
-              category.pages.map((page, index) => (
+        <div className="space-y-3">
+          <label className="p-3 font-bold text-xs text-gray-500 uppercase dark:text-gray-400 bg-gray-200">
+            Pagine
+          </label>
+          {columns.pages.map((page, index) => {
+            return (
+              <div key={index} className="space-y-3">
+                <div className="edits">
+                  <div
+                    onClick={() => handleState(page.id, !page.state)}
+                    className="p-3 text-left"
+                  >
+                    <span className="px-3 py-1 font-semibold rounded-md dark:bg-violet-400 dark:text-gray-900 cursor-pointer">
+                      <span
+                        className={`indicator-item indicator-middle indicator-center badge ${page.state == 1 ? "badge-success" : "badge-error"
+                          }`}
+                      ></span>
+                    </span>
+                  </div>
+                  <div className="dropdown-container">
+                    <button className="dropdown-toggle" onClick={() => handleParentSelection(page.id)}>
+                      Unisci con:
+                    </button>
+                    {selectedParents.includes(page.id) && (
+                      <div className="dropdown-menu">
+                        {columns.pages.map((parentPage) => (
+                          <label key={parentPage.id} className="dropdown-item">
+                            <input
+                              type="checkbox"
+                              checked={page.parents && page.parents.includes(parentPage.id)}
+                              onChange={() => handleParentPage(page.id, parentPage.id)}
+                            />
+                            {parentPage.title}
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
                 <div
                   key={page.id}
                   onClick={() => handleCurrentPage(page.id)}
                   className="cursor-pointer flex-column items-left px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
                 >
+
                   <span className="text-sm font-medium">{page.title}</span>
                   <span className=" text-xs font-light block">
                     {page.subtitle}
                   </span>
                 </div>
-              ))}
+              </div>
+            )
+          })}
+        </div>
+
+        {reusableComponents.map((category) => (
+
+          <div key={category.category} className="space-y-3">
+            <label className="p-3 font-bold text-xs text-gray-500 uppercase dark:text-gray-400 bg-gray-200">
+              {category.category}
+            </label>
             {category.components &&
               category.components.map((component, index) => (
                 <Draggable
@@ -950,7 +1024,7 @@ const PageBuilder = ({ quote_id }) => {
                     </button>
                   </div>
                 </div>
-                <PageLayout>
+                <PageLayout columns={columns} CurrentPage={CurrentPage}>
                   <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
                     {
                       columns.pages.find(
@@ -959,11 +1033,10 @@ const PageBuilder = ({ quote_id }) => {
                     }
                   </h1>
                   <div
-                    className={`bg-white min-h-screen w-full p-[1px] rounded-sm space-y-2 border-[1px] border-dashed  ${
-                      snapshot.isDraggingOver
-                        ? "border-blue-500"
-                        : "border-gray-300"
-                    }`}
+                    className={`bg-white min-h-screen w-full p-[1px] rounded-sm space-y-2 border-[1px] border-dashed  ${snapshot.isDraggingOver
+                      ? "border-blue-500"
+                      : "border-gray-300"
+                      }`}
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                   >

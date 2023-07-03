@@ -1,6 +1,29 @@
 import Image from "next/image";
+import { useState } from "react";
 
-const PageLayout = ({ children }) => {
+const PageLayout = ({ children, columns, CurrentPage, layoutinfo }) => {
+
+
+  const [editableText, setEditableText] = useState({
+    companyName: "ELLEDI Spa",
+    companyAddress: "Via Padergnone, 27 24050 Grassobbio (BG)",
+    companyPiva: "P.iva IT01610020164",
+    contactPerson: "ALBERTO LUPINI",
+    website: "www.swi.it",
+    agencyName: "SWI Agency",
+    agencyAddress: "Viale Duca d’Aosta, 16 21052 Busto Arsizio (VA)",
+    agencyTel: "Tel. 0331 320873",
+    agencyFax: "Fax. 0331 636278",
+    agencyEmail: "Mail info@swi.it",
+  });
+
+  const handleEditableTextChange = (key, value) => {
+    setEditableText((prevEditableText) => ({
+      ...prevEditableText,
+      [key]: value,
+    }));
+  };
+
   return (
     <div className="flex bg-white">
       <div className="w-3/12 bg-[#f3f3f3ff] flex flex-col align-middle p-8 justify-between">
@@ -12,89 +35,78 @@ const PageLayout = ({ children }) => {
             alt="Logo Cliente"
             className="py-5"
           />
-          <h2 className="text-xs font-bold">ELLEDI Spa</h2>
+          <h2 className="text-xs font-bold" contentEditable="true" onChange={(e) =>
+            handleEditableTextChange("companyName", e.target.value)
+          } >
+            {editableText.companyName}
+          </h2>
+          <p className="font-light text-xs mb-3" contentEditable="true" onChange={(e) =>
+            handleEditableTextChange("companyAddress", e.target.value)
+          }>
+            {editableText.companyAddress}
+          </p>
           <p className="font-light text-xs mb-5">
-            Via Padergnone, 27 24050 Grassobbio (BG) <br />
-            P.iva IT01610020164
+            <strong>PIVA: </strong>
+            <span contentEditable="true" onChange={(e) =>
+              handleEditableTextChange("companyPiva", e.target.value)
+            }>{editableText.companyPiva}</span>
           </p>
           <p className="text-xs">alla C.A.</p>
-          <p className="text-xs font-bold">ALBERTO LUPINI</p>
+          <p className="text-xs font-bold" contentEditable="true" onChange={(e) =>
+            handleEditableTextChange("contactPerson", e.target.value)
+          }>{editableText.contactPerson}</p>
         </div>
         <div className="mymenu mt-8">
           <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
           <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
           <p className="text-sm font-light">dei servizi offerti</p>
           <ul className="">
-            <li className="my-10 group cursor-pointer hover:text-black text-xs text-black relative flex flex-row items-center justify-start">
-              BRAND IDENTITY &<br /> BRAND PROTECTION
-              <div className="absolute group-hover:bg-primary bg-primary right-[-55px] z-10 rounded-full p-2 border-2 border-white">
-                <Image
-                  src="/imgs/icon-1.png"
-                  width="30"
-                  height="30"
-                  alt="Brand"
-                />
-              </div>
-            </li>
-            <li className="my-10 group cursor-pointer hover:text-black text-xs text-gray-500 relative flex flex-row items-center justify-start">
-              SITO WEB: SVILUPPO &<br /> ASSISTENZA TECNICA
-              <div className="absolute group-hover:bg-primary bg-gray-400 right-[-55px] z-10 rounded-full p-2 border-2 border-white">
-                <Image
-                  src="/imgs/icon-2.png"
-                  width="30"
-                  height="30"
-                  alt="Brand"
-                />
-              </div>
-            </li>
-            <li className="my-10 group cursor-pointer hover:text-black text-xs text-gray-500 relative flex flex-row items-center justify-start">
-              SEO
-              <br /> Search Engine Optimization
-              <div className="absolute group-hover:bg-primary bg-gray-400 right-[-55px] z-10 rounded-full p-2 border-2 border-white">
-                <Image
-                  src="/imgs/icon-3.png"
-                  width="30"
-                  height="30"
-                  alt="Brand"
-                />
-              </div>
-            </li>
-            <li className="my-10 group cursor-pointer hover:text-black text-xs text-gray-500 relative flex flex-row items-center justify-start">
-              SEM
-              <br /> Search Engine Marketing
-              <div className="absolute group-hover:bg-primary bg-gray-400 right-[-55px] z-10 rounded-full p-2 border-2 border-white">
-                <Image
-                  src="/imgs/icon-4.png"
-                  width="30"
-                  height="30"
-                  alt="Brand"
-                />
-              </div>
-            </li>
-            <li className="my-10 group cursor-pointer hover:text-black text-xs text-gray-500 relative flex flex-row items-center justify-start">
-              DEM
-              <br /> Direct Email Marketing
-              <div className="absolute group-hover:bg-primary bg-gray-400 right-[-55px] z-10 rounded-full p-2 border-2 border-white">
-                <Image
-                  src="/imgs/icon-5.png"
-                  width="30"
-                  height="30"
-                  alt="Brand"
-                />
-              </div>
-            </li>
-            <li className="my-10 group cursor-pointer hover:text-black text-xs text-gray-500 relative flex flex-row items-center justify-start">
-              SOCIAL
-              <br /> NETWORK
-              <div className="absolute group-hover:bg-primary bg-gray-400 right-[-55px] z-10 rounded-full p-2 border-2 border-white">
-                <Image
-                  src="/imgs/icon-6.png"
-                  width="30"
-                  height="30"
-                  alt="Brand"
-                />
-              </div>
-            </li>
+            {columns.pages.map((page) => {
+              let imgsrc = "/imgs/icon-1.png"
+
+              switch (page.id) {
+                case "1":
+                  imgsrc = "/imgs/icon-1.png"
+                  break;
+                case "2":
+                  imgsrc = "/imgs/icon-2.png"
+                  break;
+                case "3":
+                  imgsrc = "/imgs/icon-3.png"
+                  break;
+                case "4":
+                  imgsrc = "/imgs/icon-4.png"
+                  break;
+                case "5":
+                  imgsrc = "/imgs/icon-5.png"
+                  break;
+                case "6":
+                  imgsrc = "/imgs/icon-6.png"
+                  break;
+                default:
+                  imgsrc = "/imgs/icon-1.png"
+
+              }
+
+              return (
+                page.state && (
+                  <li className={`my-10 group cursor-pointer hover:text-black text-xs ${CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
+                    {page.title}
+                    <br />
+                    {page.subtitle}
+                    <div className={`absolute group-hover:bg-primary ${CurrentPage === page.id ? 'bg-primary' : 'bg-gray-400'} right-[-55px] z-10 rounded-full p-2 border-2 border-white`}>
+                      <Image
+                        src={imgsrc}
+                        width="30"
+                        height="30"
+                        alt="Brand"
+                      />
+                    </div>
+                  </li>
+                )
+
+              )
+            })}
           </ul>
         </div>
         <div className="info-footer">
@@ -107,7 +119,7 @@ const PageLayout = ({ children }) => {
             Tel. 0331 320873
             <br />
             Fax. 0331 636278 <br />
-            Mail info@siti-indicizzati.com
+            Mail info@swi.it
           </p>
           <Image
             src="/imgs/google-partners.png"
