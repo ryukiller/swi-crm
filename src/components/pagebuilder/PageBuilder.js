@@ -859,6 +859,21 @@ const PageBuilder = ({ quote_id }) => {
     }));
   };
 
+  function getAllParentIds(array) {
+    const allParentIds = new Set();
+    const itemsWithParents = new Set();
+
+    for (const item of array) {
+      if (item.parents.length > 0) {
+        itemsWithParents.add(item.id);
+        for (const parentId of item.parents) {
+          allParentIds.add(parentId);
+        }
+      }
+    }
+
+    return [allParentIds, itemsWithParents];
+  }
 
   const Sidebar = () => {
 
@@ -874,60 +889,93 @@ const PageBuilder = ({ quote_id }) => {
       });
     };
 
+    const [pageList, setPageList] = useState(false)
+
     return (
       <nav className="-mx-3 space-y-6">
         <div className="space-y-3">
-          <label className="p-3 font-bold text-xs text-gray-500 uppercase dark:text-gray-400 bg-gray-200">
+          <label onClick={() => setPageList(!pageList)} className="p-3 cursor-pointer font-bold text-xs text-gray-500 uppercase dark:text-gray-400 bg-gray-200">
             Pagine
           </label>
-          {columns.pages.map((page, index) => {
-            return (
-              <div key={index} className="space-y-3">
-                <div className="edits flex flex-row items-center justify-start">
-                  <div
-                    onClick={() => handleState(page.id, !page.state)}
-                    className="p-1 text-left"
-                  >
-                    <span className="px-2 py-1 font-semibold rounded-md dark:bg-violet-400 dark:text-gray-900 cursor-pointer">
+          {pageList &&
+            columns.pages.map((page, index) => {
+
+              const isParentSelected = selectedParents.includes(page.id);
+              const [allParentIds, itemsWithParents] = getAllParentIds(columns.pages);
+
+              return (
+                <div key={index} className="border-b-2 last:border-b-0 pb-2">
+                  <div className="edits flex flex-row items-center justify-start py-2">
+                    <div
+                      onClick={() => handleState(page.id, !page.state)}
+                      className="p-0 flex items-center justify-center"
+                    >
                       <span
                         className={`indicator-item indicator-middle indicator-center badge ${page.state == 1 ? "badge-success" : "badge-error"
                           }`}
                       ></span>
-                    </span>
-                  </div>
-                  <div className="dropdown">
-                    <label tabIndex={0} className="m-1 text-xs p-2 bg-slate-700 text-white rounded-md" onClick={() => handleParentSelection(page.id)}>Unisci con:</label>
-                    {selectedParents.includes(page.id) && (
-                      <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                        {columns.pages.map((parentPage, index) => (
-                          <li key={index}>
-                            <input
-                              type="checkbox"
-                              className="text-[8px]"
-                              checked={page.parents && page.parents.includes(parentPage.id)}
-                              onChange={() => handleParentPage(page.id, parentPage.id)}
-                            />
-                            {parentPage.title}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </div>
-                <div
-                  key={page.id}
-                  onClick={() => handleCurrentPage(page.id)}
-                  className="cursor-pointer flex-column items-left px-3 py-2 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
-                >
+                    </div>
+                    <div className="dropdown h-[20px]">
+                      <label
+                        tabIndex={0}
+                        className="block ml-2 text-[10px] px-2 py-[3px] bg-slate-700 text-white rounded-md cursor-pointer"
+                        onClick={() => handleParentSelection(page.id)}
+                      >
+                        unisci con:
+                      </label>
+                      {isParentSelected && (
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+                        >
+                          {columns.pages
+                            .filter((parentPage) => parentPage.id !== page.id)
+                            .map((parentPage, index) => {
 
-                  <span className="text-sm font-medium">{page.title}</span>
-                  <span className=" text-xs font-light block">
-                    {page.subtitle}
-                  </span>
+                              const isParentPageSelected =
+                                page.parents && page.parents.includes(parentPage.id);
+
+
+
+                              if (!isParentPageSelected && allParentIds.has(parentPage.id) || !isParentPageSelected && itemsWithParents.has(parentPage.id)) {
+                                return null;
+                              }
+
+                              return (
+                                <li key={index} className="text-[12px] pr-2 overflow-hidden">
+
+                                  <label className="">
+                                    <input
+                                      type="checkbox"
+                                      className="w-4"
+                                      checked={isParentPageSelected}
+                                      onChange={() =>
+                                        handleParentPage(page.id, parentPage.id)
+                                      }
+                                    />
+                                    <span className="text-ellipsis w-[120px] overflow-hidden whitespace-nowrap">
+                                      {parentPage.title}
+                                    </span>
+                                  </label>
+                                </li>
+                              );
+                            })}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                  <div
+                    key={page.id}
+                    onClick={() => handleCurrentPage(page.id)}
+                    className="mt-0 cursor-pointer flex-column items-left px-3 py-1 text-gray-600 transition-colors duration-300 transform rounded-lg dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-gray-200 hover:text-gray-700"
+                  >
+                    <span className="text-sm font-medium">{page.title}</span>
+                    <span className=" text-xs font-light block">{page.subtitle}</span>
+                  </div>
                 </div>
-              </div>
-            )
-          })}
+              );
+            })}
+
         </div>
 
         {reusableComponents.map((category) => (
