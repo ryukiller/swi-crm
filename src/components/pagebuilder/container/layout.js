@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-const PageLayout = ({ children, columns, CurrentPage, layoutinfo }) => {
+const PageLayout = ({ children, columns, CurrentPage }) => {
 
 
   const [editableText, setEditableText] = useState({

@@ -883,35 +883,34 @@ const PageBuilder = ({ quote_id }) => {
           {columns.pages.map((page, index) => {
             return (
               <div key={index} className="space-y-3">
-                <div className="edits">
+                <div className="edits flex flex-row items-center justify-start">
                   <div
                     onClick={() => handleState(page.id, !page.state)}
-                    className="p-3 text-left"
+                    className="p-1 text-left"
                   >
-                    <span className="px-3 py-1 font-semibold rounded-md dark:bg-violet-400 dark:text-gray-900 cursor-pointer">
+                    <span className="px-2 py-1 font-semibold rounded-md dark:bg-violet-400 dark:text-gray-900 cursor-pointer">
                       <span
                         className={`indicator-item indicator-middle indicator-center badge ${page.state == 1 ? "badge-success" : "badge-error"
                           }`}
                       ></span>
                     </span>
                   </div>
-                  <div className="dropdown-container">
-                    <button className="dropdown-toggle" onClick={() => handleParentSelection(page.id)}>
-                      Unisci con:
-                    </button>
+                  <div className="dropdown">
+                    <label tabIndex={0} className="m-1 text-xs p-2 bg-slate-700 text-white rounded-md" onClick={() => handleParentSelection(page.id)}>Unisci con:</label>
                     {selectedParents.includes(page.id) && (
-                      <div className="dropdown-menu">
-                        {columns.pages.map((parentPage) => (
-                          <label key={parentPage.id} className="dropdown-item">
+                      <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        {columns.pages.map((parentPage, index) => (
+                          <li key={index}>
                             <input
                               type="checkbox"
+                              className="text-[8px]"
                               checked={page.parents && page.parents.includes(parentPage.id)}
                               onChange={() => handleParentPage(page.id, parentPage.id)}
                             />
                             {parentPage.title}
-                          </label>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     )}
                   </div>
                 </div>
