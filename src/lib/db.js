@@ -1,6 +1,6 @@
 import { createPool } from 'mysql2/promise';
 
-const pool = createPool({
+const params = {
   host: process.env.PS_HOST,
   user: process.env.PS_USER,
   password: process.env.PS_PASS,
@@ -9,6 +9,10 @@ const pool = createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-});
+}
+
+const pool = createPool(process.env.PS_DB_URL);
+
+
 
 export default pool;
