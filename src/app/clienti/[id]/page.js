@@ -162,9 +162,9 @@ const Cliente = ({ params = {} }) => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {cliente && cliente[0].contratti.map((item) => {
+                                            {cliente && cliente[0].contratti.map((item, index) => {
                                                 return (
-                                                    <tr>
+                                                    <tr key={index}>
                                                         <th>{item.id}</th>
                                                         <th>{item.contract_type}</th>
                                                         <td>{euro.format(item.contract_amount)}</td>

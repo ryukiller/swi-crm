@@ -88,13 +88,16 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
 
               }
 
+              console.log(columns.pages[CurrentPage - 1].parents, page.id)
+
+
               return (
                 page.state && (
-                  <li className={`my-10 group cursor-pointer hover:text-black text-xs ${CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
+                  <li className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
                     {page.title}
                     <br />
                     {page.subtitle}
-                    <div className={`absolute group-hover:bg-primary ${CurrentPage === page.id ? 'bg-primary' : 'bg-gray-400'} right-[-55px] z-10 rounded-full p-2 border-2 border-white`}>
+                    <div className={`absolute group-hover:bg-primary ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'bg-primary' : 'bg-gray-400'} right-[-55px] z-10 rounded-full p-2 border-2 border-white`}>
                       <Image
                         src={imgsrc}
                         width="30"
