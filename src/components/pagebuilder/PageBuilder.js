@@ -349,6 +349,8 @@ const PageBuilder = ({ quote_id }) => {
     pageArea: {
       id: "pageArea",
       items: [],
+      state: true,
+      parents: []
     },
   });
 
@@ -513,6 +515,8 @@ const PageBuilder = ({ quote_id }) => {
         pageArea: {
           id: "pageArea",
           items: updatedPageItems,
+          state: updatedPages.state,
+          parents: updatedPages.parents
         },
       };
     });
@@ -1090,6 +1094,7 @@ const PageBuilder = ({ quote_id }) => {
                     {columns.pageArea &&
                       columns.pageArea.items &&
                       columns.pageArea.items.map((item, index) => (
+
                         <Draggable
                           key={item.id}
                           draggableId={item.id}
@@ -1118,7 +1123,61 @@ const PageBuilder = ({ quote_id }) => {
                             </div>
                           )}
                         </Draggable>
+
                       ))}
+                    {/* {columns.pageArea &&
+                      columns.pageArea.parents &&
+                      columns.pageArea.parents.map((item, index) => {
+                        return (
+                          <div>Ciao{item}</div>
+                        )
+                      })
+                    } */}
+                    <div>
+                      {columns.pages[CurrentPage - 1].parents.map(
+                        (item, index) => (
+                          <>
+                            <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
+                              {columns.pages[item - 1].title}
+                            </h1>
+                            {
+                              columns.pages[item - 1].items.map((item, i) => (
+
+                                <Draggable
+                                  key={item.id}
+                                  draggableId={item.id}
+                                  index={index}
+                                  isDragDisabled={isChildDragging}
+                                >
+                                  {(provided) => (
+                                    <div
+                                      className="cursor-move flex"
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                    >
+                                      <EditMenu
+                                        itemId={item.id}
+                                        columns={columns}
+                                        editingId={editingId}
+                                        setEditingId={setEditingId}
+                                      >
+                                        <ComponentRenderer
+                                          item={item}
+                                          index={index}
+                                          innerListItems={innerListItems}
+                                        />
+                                      </EditMenu>
+                                    </div>
+                                  )}
+                                </Draggable>
+                              ))
+                            }
+                          </>
+                        )
+                      )
+                      }
+                    </div>
                     {provided.placeholder}
                   </div>
                 </PageLayout>
