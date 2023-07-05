@@ -126,12 +126,12 @@
 //       const rows = response.data.reports[0].data.rows;
 //       const dates = rows.map(row => row.dimensions[0]);
 //       const sessions = rows.map(row => parseInt(row.metrics[0].values[0]));
-  
+
 //       const data = {
 //           dates: dates,
 //           sessions: sessions
 //       }
-  
+
 //       // Send the API response back to the client
 //       res.status(200).json(data);
 
@@ -164,12 +164,12 @@
 //       const rows = response.data.reports[0].data.rows;
 //       const dates = rows.map(row => row.dimensions[0]);
 //       const sessions = rows.map(row => parseInt(row.metrics[0].values[0]));
-  
+
 //       const data = {
 //           dates: dates,
 //           sessions: sessions
 //       }
-  
+
 //       // Send the API response back to the client
 //       res.status(200).json(data);
 // }
@@ -184,7 +184,7 @@
 
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
-const privateKeyPem = require('../../../swi-crm-e655c7364833.json');
+const privateKeyPem = require('../../../credenziali/swi-crm-96da882ab1f1.json');
 
 export default async function handler(req, res) {
   // const auth = new google.auth.GoogleAuth({
@@ -198,15 +198,15 @@ export default async function handler(req, res) {
   const Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
   const comparestart = new Date(start)
 
-  comparestart.setDate( comparestart.getDate() - Math.abs(Difference_In_Days) )
+  comparestart.setDate(comparestart.getDate() - Math.abs(Difference_In_Days))
 
   const compare = comparestart.toISOString().split('T')[0]
 
   const auth = new JWT({
-        email: privateKeyPem.client_email,
-        key: privateKeyPem.private_key,
-        scopes: ['https://www.googleapis.com/auth/analytics.readonly']
-      });
+    email: privateKeyPem.client_email,
+    key: privateKeyPem.private_key,
+    scopes: ['https://www.googleapis.com/auth/analytics.readonly']
+  });
 
   const analyticsData = google.analyticsdata({
     version: 'v1beta',
@@ -230,13 +230,14 @@ export default async function handler(req, res) {
         name: 'screenPageViews'
       }
     ],
-    orderBys:[
-      {dimension:{
-              dimensionName: 'date'
-          } 
+    orderBys: [
+      {
+        dimension: {
+          dimensionName: 'date'
+        }
       }
-  ]
-  
+    ]
+
   };
 
   const request2 = {
@@ -256,41 +257,42 @@ export default async function handler(req, res) {
         name: 'screenPageViews'
       }
     ],
-    orderBys:[
-      {dimension:{
-              dimensionName: 'date'
-          } 
+    orderBys: [
+      {
+        dimension: {
+          dimensionName: 'date'
+        }
       }
-  ]
-  
+    ]
+
   };
 
   try {
-      const response = await analyticsData.properties.runReport({ property: 'properties/322852986', requestBody: request });
-      const rows = response.data.rows;
+    const response = await analyticsData.properties.runReport({ property: 'properties/322852986', requestBody: request });
+    const rows = response.data.rows;
 
-      const dates1 = rows.map(row => row.dimensionValues[0].value);
-      const sessions1 = rows.map(row => row.metricValues[0].value);
+    const dates1 = rows.map(row => row.dimensionValues[0].value);
+    const sessions1 = rows.map(row => row.metricValues[0].value);
 
-      const response2 = await analyticsData.properties.runReport({ property: 'properties/322852986', requestBody: request2 });
-      const rows2 = response2.data.rows;
+    const response2 = await analyticsData.properties.runReport({ property: 'properties/322852986', requestBody: request2 });
+    const rows2 = response2.data.rows;
 
-      const dates2 = rows2.map(row => row.dimensionValues[0].value);
-      const sessions2 = rows2.map(row => row.metricValues[0].value);
+    const dates2 = rows2.map(row => row.dimensionValues[0].value);
+    const sessions2 = rows2.map(row => row.metricValues[0].value);
 
-      const data = {
-        row1: {
-          dates: dates1,
-          sessions: sessions1
-        },
-        row2: {
-          dates: dates2,
-          sessions: sessions2
-        }
+    const data = {
+      row1: {
+        dates: dates1,
+        sessions: sessions1
+      },
+      row2: {
+        dates: dates2,
+        sessions: sessions2
       }
-  
-      // Send the API response back to the client
-      res.status(200).json(data);
+    }
+
+    // Send the API response back to the client
+    res.status(200).json(data);
 
   } catch (error) {
     console.error(error);
