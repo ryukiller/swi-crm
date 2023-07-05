@@ -19,7 +19,8 @@ const Elenco = ({ content, onTodosChange, isEdit, ...props }) => {
 
   useEffect(() => {
     // Call the onTodosChange prop whenever the todos array changes
-    onTodosChange(todos);
+    if (onTodosChange)
+      onTodosChange(todos);
   }, [todos, onTodosChange]);
 
   const handleInputChange = (e) => {
@@ -113,11 +114,10 @@ const Elenco = ({ content, onTodosChange, isEdit, ...props }) => {
                         ...provided.draggableProps.style,
                         background: snapshot.isDragging ? "lightblue" : "",
                       }}
-                      className={`${
-                        isEdit
+                      className={`${isEdit
                           ? "flex flex-row items-start justify-start bg-slate-200 p-2 m-1 border-dashed border border-slate-800"
                           : ""
-                      }`}
+                        }`}
                     >
                       <div className="flex flex-row mr-2">
                         {isEdit && (

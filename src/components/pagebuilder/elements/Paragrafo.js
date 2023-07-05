@@ -9,12 +9,14 @@ const Paragrafo = ({ content, isEdit, onSaveEdits, ...props }) => {
   };
 
   const handleEditSave = () => {
-    onSaveEdits(editingValue);
+    if (onSaveEdits)
+      onSaveEdits(editingValue);
     setEditing(!editing);
   };
 
   useEffect(() => {
-    onSaveEdits(editingValue);
+    if (onSaveEdits)
+      onSaveEdits(editingValue);
   }, [content, onSaveEdits]);
 
   return (

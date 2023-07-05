@@ -893,7 +893,7 @@ const PageBuilder = ({ quote_id }) => {
       });
     };
 
-    const [pageList, setPageList] = useState(false)
+    const [pageList, setPageList] = useState(true)
 
     return (
       <nav className="-mx-3 space-y-6">
@@ -1125,14 +1125,6 @@ const PageBuilder = ({ quote_id }) => {
                         </Draggable>
 
                       ))}
-                    {/* {columns.pageArea &&
-                      columns.pageArea.parents &&
-                      columns.pageArea.parents.map((item, index) => {
-                        return (
-                          <div>Ciao{item}</div>
-                        )
-                      })
-                    } */}
                     <div>
                       {columns.pages[CurrentPage - 1].parents.map(
                         (item, index) => (
