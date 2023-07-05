@@ -1,6 +1,8 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+const url = process.env.SITE || "http://localhost:3000"
+
 export const authOptions = {
   secret: process.env.JWT_SECRET,
   session: {
@@ -20,7 +22,7 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         // Add logic here to look up the user from the credentials supplied
-        const res = await fetch("http://localhost:3000/api/login", {
+        const res = await fetch(url + "/api/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -52,7 +54,7 @@ export const authOptions = {
 
     async session({ session, token }) {
       const response = await fetch(
-        `http://localhost:3000/api/profilo/${token.id}`,
+        `${url}/api/profilo/${token.id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
