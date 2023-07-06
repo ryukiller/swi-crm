@@ -84,10 +84,10 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
             columns.pages
               .filter((item) => item.state !== false)
               .filter((item) => !allParents.includes(item.id))
-              .map((item) => {
+              .map((item, index) => {
 
                 return (
-                  <div className="canvaspage flex bg-white w-[1240px] h-[1754px] my-10">
+                  <div key={index} className="canvaspage flex bg-white w-[1240px] h-[1754px] my-10">
                     <div className="w-3/12 bg-[#f3f3f3ff] flex flex-col align-middle p-8 justify-between">
                       <div className="intenstazione">
                         <Image
@@ -228,20 +228,20 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
                       <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
                         {item.title}
                       </h1>
-                      {item.items.map((preview) => (
-                        <>
+                      {item.items.map((preview, index) => (
+                        <div key={index}>
                           <PreviewRenderer item={preview} />
-                          {item.parents.map((parents) => (
-                            <>
+                          {item.parents.map((parents, index) => (
+                            <div key={index}>
                               <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
                                 {columns.pages[parents - 1].title}
                               </h1>
                               {columns.pages[parents - 1].items.map((previewinner) => (
                                 <PreviewRenderer item={previewinner} />
                               ))}
-                            </>
+                            </div>
                           ))}
-                        </>
+                        </div>
                       ))}
                     </div>
                   </div>
