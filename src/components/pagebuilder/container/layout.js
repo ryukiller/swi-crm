@@ -236,8 +236,8 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
                               <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
                                 {columns.pages[parents - 1].title}
                               </h1>
-                              {columns.pages[parents - 1].items.map((previewinner) => (
-                                <PreviewRenderer item={previewinner} />
+                              {columns.pages[parents - 1].items.map((previewinner, index) => (
+                                <PreviewRenderer key={index} item={previewinner} />
                               ))}
                             </div>
                           ))}
