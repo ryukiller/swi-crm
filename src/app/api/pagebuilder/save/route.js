@@ -11,10 +11,11 @@ export async function POST(req) {
     }
     const connection = await pool.getConnection();
     await connection.query(`
-      INSERT INTO preventivi (slug, data)
-      VALUES (?, ?)
-      ON DUPLICATE KEY UPDATE data = ?, updated = CURRENT_TIMESTAMP;
-    `, [page_id, JSON.stringify(data), JSON.stringify(data)]);
+    UPDATE preventivi
+    SET data = ?,
+        updated = CURRENT_TIMESTAMP()
+    WHERE slug = ?;
+    `, [JSON.stringify(data), page_id]);
     connection.release();
     return NextResponse.json({ message: 'Page saved successfully' });
   } catch (error) {

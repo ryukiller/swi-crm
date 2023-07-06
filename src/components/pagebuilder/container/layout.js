@@ -5,6 +5,17 @@ import { jsPDF } from "jspdf";
 
 import PreviewRenderer from "./PreviewRenderer";
 
+function getAllParents(obj, parents = []) {
+  obj.forEach(item => {
+    if (item.parents && item.parents.length > 0) {
+      parents.push(...item.parents);
+      const parentObjs = obj.filter(parentItem => item.parents.includes(parentItem.id));
+      getAllParents(parentObjs, parents);
+    }
+  });
+  return parents;
+}
+
 const PageLayout = ({ children, columns, CurrentPage }) => {
 
   const createPDF = async () => {
@@ -55,6 +66,10 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
 
   const [isPreview, setIsPreview] = useState(false);
 
+  const allParents = getAllParents(columns.pages);
+
+  console.log(columns)
+
   return (
     <>
       <div className="flex flex-row items-center justify-start gap-4 m-2 p-2 text-white">
@@ -65,8 +80,10 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
 
         <div id="pageBuilder" >
           {
+
             columns.pages
               .filter((item) => item.state !== false)
+              .filter((item) => !allParents.includes(item.id))
               .map((item) => {
 
                 return (
@@ -208,12 +225,11 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
                           </p>
                         </div>
                       </div>
-
+                      <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
+                        {item.title}
+                      </h1>
                       {item.items.map((preview) => (
                         <>
-                          <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
-                            {item.title}
-                          </h1>
                           <PreviewRenderer item={preview} />
                           {item.parents.map((parents) => (
                             <>

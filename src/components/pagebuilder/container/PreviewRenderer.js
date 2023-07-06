@@ -1,9 +1,6 @@
 import { Button, Titoli, Totale, Paragrafo, Elenco } from "../elements";
 
 const PreviewRenderer = ({ item }) => {
-
-    console.log(item)
-
     const renderComponent = () => {
         switch (item.type) {
             case "title":
