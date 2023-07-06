@@ -26,7 +26,19 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
 
     pages.forEach(async (page) => {
 
-      const data = await html2canvas(page);
+      const data = await html2canvas(page,
+        { // options
+          onclone: (el) => {
+            const elementsWithShiftedDownwardText = el.querySelectorAll('.fixpadding');
+            elementsWithShiftedDownwardText.forEach(element => {
+              // adjust styles or do whatever you want here
+              element.classList.remove("py-2")
+              element.classList.add("pb-[16px]")
+              element.classList.add("pt-[4px]")
+
+            });
+          }
+        });
       const img = data.toDataURL("image/png");
       const imgProperties = pdf.getImageProperties(img);
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -34,7 +46,7 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
       if (count !== 0) {
         pdf.addPage();
       }
-      pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
       count++
       if (count === pages.length) {
         pdf.save("shipping_label.pdf");
@@ -117,62 +129,62 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
                         <p className="text-xs font-bold" contentEditable="true" onChange={(e) =>
                           handleEditableTextChange("contactPerson", e.target.value)
                         }>{editableText.contactPerson}</p>
-                      </div>
-                      <div className="mymenu mt-8">
-                        <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
-                        <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
-                        <p className="text-sm font-light">dei servizi offerti</p>
-                        <ul className="">
-                          {columns.pages.map((page) => {
-                            let imgsrc = "/imgs/icon-1.png"
+                        <div className="mymenu mt-36">
+                          <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
+                          <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
+                          <p className="text-sm font-light">dei servizi offerti</p>
+                          <ul className="">
+                            {columns.pages.map((page) => {
+                              let imgsrc = "/imgs/icon-1.png"
 
-                            switch (page.id) {
-                              case "1":
-                                imgsrc = "/imgs/icon-1.png"
-                                break;
-                              case "2":
-                                imgsrc = "/imgs/icon-2.png"
-                                break;
-                              case "3":
-                                imgsrc = "/imgs/icon-3.png"
-                                break;
-                              case "4":
-                                imgsrc = "/imgs/icon-4.png"
-                                break;
-                              case "5":
-                                imgsrc = "/imgs/icon-5.png"
-                                break;
-                              case "6":
-                                imgsrc = "/imgs/icon-6.png"
-                                break;
-                              default:
-                                imgsrc = "/imgs/icon-1.png"
+                              switch (page.id) {
+                                case "1":
+                                  imgsrc = "/imgs/icon-1.png"
+                                  break;
+                                case "2":
+                                  imgsrc = "/imgs/icon-2.png"
+                                  break;
+                                case "3":
+                                  imgsrc = "/imgs/icon-3.png"
+                                  break;
+                                case "4":
+                                  imgsrc = "/imgs/icon-4.png"
+                                  break;
+                                case "5":
+                                  imgsrc = "/imgs/icon-5.png"
+                                  break;
+                                case "6":
+                                  imgsrc = "/imgs/icon-6.png"
+                                  break;
+                                default:
+                                  imgsrc = "/imgs/icon-1.png"
 
-                            }
+                              }
 
-                            //console.log(columns.pages[item - 1].parents, page.id)
+                              //console.log(columns.pages[item - 1].parents, page.id)
 
 
-                            return (
-                              page.state && (
-                                <li className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[item.id - 1].parents.includes(page.id) || item.id === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
-                                  {page.title}
-                                  <br />
-                                  {page.subtitle}
-                                  <div className={`absolute group-hover:bg-primary ${columns.pages[item.id - 1].parents.includes(page.id) || item.id === page.id ? 'bg-primary' : 'bg-gray-400'} right-[-55px] z-10 rounded-full p-2 border-2 border-white`}>
-                                    <Image
-                                      src={imgsrc}
-                                      width="30"
-                                      height="30"
-                                      alt="Brand"
-                                    />
-                                  </div>
-                                </li>
+                              return (
+                                page.state && (
+                                  <li className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[item.id - 1].parents.includes(page.id) || item.id === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
+                                    {page.title}
+                                    <br />
+                                    {page.subtitle}
+                                    <div className={`absolute group-hover:bg-primary ${columns.pages[item.id - 1].parents.includes(page.id) || item.id === page.id ? 'bg-primary' : 'bg-gray-400'} right-[-55px] z-10 rounded-full p-2 border-2 border-white`}>
+                                      <Image
+                                        src={imgsrc}
+                                        width="30"
+                                        height="30"
+                                        alt="Brand"
+                                      />
+                                    </div>
+                                  </li>
+                                )
+
                               )
-
-                            )
-                          })}
-                        </ul>
+                            })}
+                          </ul>
+                        </div>
                       </div>
                       <div className="info-footer">
                         <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
@@ -225,17 +237,17 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
                           </p>
                         </div>
                       </div>
-                      <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
+                      <div className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding">
                         {item.title}
-                      </h1>
+                      </div>
                       {item.items.map((preview, index) => (
                         <div key={index}>
                           <PreviewRenderer item={preview} />
                           {item.parents.map((parents, index) => (
                             <div key={index}>
-                              <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
+                              <div className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding">
                                 {columns.pages[parents - 1].title}
-                              </h1>
+                              </div>
                               {columns.pages[parents - 1].items.map((previewinner, index) => (
                                 <PreviewRenderer key={index} item={previewinner} />
                               ))}
@@ -281,62 +293,62 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
               <p className="text-xs font-bold" contentEditable="true" onChange={(e) =>
                 handleEditableTextChange("contactPerson", e.target.value)
               }>{editableText.contactPerson}</p>
-            </div>
-            <div className="mymenu mt-8">
-              <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
-              <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
-              <p className="text-sm font-light">dei servizi offerti</p>
-              <ul className="">
-                {columns.pages.map((page) => {
-                  let imgsrc = "/imgs/icon-1.png"
+              <div className="mymenu mt-36">
+                <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
+                <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
+                <p className="text-sm font-light">dei servizi offerti</p>
+                <ul className="">
+                  {columns.pages.map((page) => {
+                    let imgsrc = "/imgs/icon-1.png"
 
-                  switch (page.id) {
-                    case "1":
-                      imgsrc = "/imgs/icon-1.png"
-                      break;
-                    case "2":
-                      imgsrc = "/imgs/icon-2.png"
-                      break;
-                    case "3":
-                      imgsrc = "/imgs/icon-3.png"
-                      break;
-                    case "4":
-                      imgsrc = "/imgs/icon-4.png"
-                      break;
-                    case "5":
-                      imgsrc = "/imgs/icon-5.png"
-                      break;
-                    case "6":
-                      imgsrc = "/imgs/icon-6.png"
-                      break;
-                    default:
-                      imgsrc = "/imgs/icon-1.png"
+                    switch (page.id) {
+                      case "1":
+                        imgsrc = "/imgs/icon-1.png"
+                        break;
+                      case "2":
+                        imgsrc = "/imgs/icon-2.png"
+                        break;
+                      case "3":
+                        imgsrc = "/imgs/icon-3.png"
+                        break;
+                      case "4":
+                        imgsrc = "/imgs/icon-4.png"
+                        break;
+                      case "5":
+                        imgsrc = "/imgs/icon-5.png"
+                        break;
+                      case "6":
+                        imgsrc = "/imgs/icon-6.png"
+                        break;
+                      default:
+                        imgsrc = "/imgs/icon-1.png"
 
-                  }
+                    }
 
-                  console.log(columns.pages[CurrentPage - 1].parents, page.id)
+                    console.log(columns.pages[CurrentPage - 1].parents, page.id)
 
 
-                  return (
-                    page.state && (
-                      <li className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
-                        {page.title}
-                        <br />
-                        {page.subtitle}
-                        <div className={`absolute group-hover:bg-primary ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'bg-primary' : 'bg-gray-400'} right-[-55px] z-10 rounded-full p-2 border-2 border-white`}>
-                          <Image
-                            src={imgsrc}
-                            width="30"
-                            height="30"
-                            alt="Brand"
-                          />
-                        </div>
-                      </li>
+                    return (
+                      page.state && (
+                        <li className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
+                          {page.title}
+                          <br />
+                          {page.subtitle}
+                          <div className={`absolute group-hover:bg-primary ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'bg-primary' : 'bg-gray-400'} right-[-55px] z-10 rounded-full p-2 border-2 border-white`}>
+                            <Image
+                              src={imgsrc}
+                              width="30"
+                              height="30"
+                              alt="Brand"
+                            />
+                          </div>
+                        </li>
+                      )
+
                     )
-
-                  )
-                })}
-              </ul>
+                  })}
+                </ul>
+              </div>
             </div>
             <div className="info-footer">
               <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
