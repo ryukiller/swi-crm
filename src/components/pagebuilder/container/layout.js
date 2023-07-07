@@ -80,8 +80,6 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
 
   const allParents = getAllParents(columns.pages);
 
-  console.log(columns)
-
   return (
     <>
       <div className="flex flex-row items-center justify-start gap-4 m-2 p-2 text-white">
