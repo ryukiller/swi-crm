@@ -19,17 +19,20 @@ TODO:
 
 */
 "use client";
-import React, { useState, useEffect } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { v4 as uuidv4 } from "uuid";
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState, ContentState } from "draft-js";
+
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { stateToHTML } from "draft-js-export-html";
-import axios from "axios";
-import { Button, Titoli, Totale, Paragrafo, Elenco } from "./elements";
-import PageLayout from "./container/layout";
+
+import { Button, Elenco, Paragrafo, Titoli, Totale } from "./elements";
+import { ContentState, EditorState } from "draft-js";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import React, { useEffect, useState } from "react";
+
+import { Editor } from "react-draft-wysiwyg";
 import { IncrementalCache } from "next/dist/server/lib/incremental-cache";
+import PageLayout from "./container/layout";
+import axios from "axios";
+import { stateToHTML } from "draft-js-export-html";
+import { v4 as uuidv4 } from "uuid";
 
 const ComponentRenderer = ({ item, index, innerListItems, isEdit }) => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -352,7 +355,27 @@ const PageBuilder = ({ quote_id }) => {
       state: true,
       parents: []
     },
+    pageInfo: {
+      companyLogo:"",
+      companyName: "ELLEDI Spa",
+      companyAddress: "Via Padergnone, 27 24050 Grassobbio (BG)",
+      companyPiva: "P.iva IT01610020164",
+      contactPerson: "ALBERTO LUPINI",
+      agencyWebsite: "www.swi.it",
+      agencyName: "SWI Agency",
+      agencyAddress: "Viale Duca d'Aosta, 16 21052 Busto Arsizio (VA)",
+      agencyTel: "Tel. 0331 320873",
+      agencyFax: "Fax. 0331 636278",
+      agencyEmail: "Mail info@swi.it",
+      preventivoDate:"",
+      preventivoTitle: "",
+      preventivoSubitle: "",
+      preventivoMessage:"",
+    }
   });
+
+
+  
 
   const EditMenu = ({ children, itemId, columns, editingId, setEditingId }) => {
     const [isHover, setIsHover] = useState(false);
@@ -493,6 +516,7 @@ const PageBuilder = ({ quote_id }) => {
     }
   }, [saveData, columns]);
 
+
   function handleCurrentPage(id) {
     // load pageArea with the selected page
     setCurrentPage(id);
@@ -536,9 +560,10 @@ const PageBuilder = ({ quote_id }) => {
 
       return {
         ...prevColumns,
-        pages: updatedPages,
+        pages: updatedPages
       };
     });
+    console.log(columns.pageInfo)
     setSaveData(true);
   };
 
@@ -554,6 +579,7 @@ const PageBuilder = ({ quote_id }) => {
         const newCols = response.data;
         newCols.pageArea = response.data.pages[0];
         setColumns(newCols);
+        setEditableText(newCols.pageInfo);
       }
     } catch (error) {
       console.error("Error loading page:", error);
@@ -561,8 +587,26 @@ const PageBuilder = ({ quote_id }) => {
   };
 
   useEffect(() => {
-    loadPage();
+    loadPage();  
   }, []);
+
+
+  const [editableText, setEditableText] = useState(columns.pageInfo);
+
+  const handleTextChange = (newInfo) => {
+    setEditableText(newInfo);
+  };
+
+  useEffect(() => {
+    console.log(editableText)
+    setColumns((prevColumns) => {
+      return {
+        ...prevColumns,
+        pageInfo: editableText,
+      };
+    });
+    console.log(columns.pageInfo)
+  }, [editableText])
 
   const [isClient, setIsClient] = useState(false);
 
@@ -879,6 +923,8 @@ const PageBuilder = ({ quote_id }) => {
     return [allParentIds, itemsWithParents];
   }
 
+  
+
   const Sidebar = () => {
 
     const [selectedParents, setSelectedParents] = useState([]);
@@ -894,6 +940,8 @@ const PageBuilder = ({ quote_id }) => {
     };
 
     const [pageList, setPageList] = useState(true)
+
+
 
     return (
       <nav className="-mx-3 space-y-6">
@@ -1075,7 +1123,7 @@ const PageBuilder = ({ quote_id }) => {
                     </button>
                   </div>
                 </div>
-                <PageLayout columns={columns} CurrentPage={CurrentPage}>
+                <PageLayout columns={columns} CurrentPage={CurrentPage} editableText={editableText} textChange={handleTextChange}>
                   <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
                     {
                       columns.pages.find(

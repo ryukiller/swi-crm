@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
+
 import Image from "next/image";
-import { useState } from "react";
+import PreviewRenderer from "./PreviewRenderer";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-
-import PreviewRenderer from "./PreviewRenderer";
 
 function getAllParents(obj, parents = []) {
   obj.forEach(item => {
@@ -16,7 +16,7 @@ function getAllParents(obj, parents = []) {
   return parents;
 }
 
-const PageLayout = ({ children, columns, CurrentPage }) => {
+const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }) => {
 
   const createPDF = async () => {
     const pdf = new jsPDF("portrait", "pt", "a4");
@@ -55,22 +55,9 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
 
   };
 
-
-  const [editableText, setEditableText] = useState({
-    companyName: "ELLEDI Spa",
-    companyAddress: "Via Padergnone, 27 24050 Grassobbio (BG)",
-    companyPiva: "P.iva IT01610020164",
-    contactPerson: "ALBERTO LUPINI",
-    website: "www.swi.it",
-    agencyName: "SWI Agency",
-    agencyAddress: "Viale Duca d’Aosta, 16 21052 Busto Arsizio (VA)",
-    agencyTel: "Tel. 0331 320873",
-    agencyFax: "Fax. 0331 636278",
-    agencyEmail: "Mail info@swi.it",
-  });
-
   const handleEditableTextChange = (key, value) => {
-    setEditableText((prevEditableText) => ({
+    console.log(editableText)
+    textChange((prevEditableText) => ({
       ...prevEditableText,
       [key]: value,
     }));
@@ -107,25 +94,25 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
                           alt="Logo Cliente"
                           className="py-5"
                         />
-                        <h2 className="text-xs font-bold" contentEditable="true" onChange={(e) =>
-                          handleEditableTextChange("companyName", e.target.value)
+                        <h2 className="text-xs font-bold" contentEditable="true" onInput={(e) =>
+                          handleEditableTextChange("companyName", e.target.textContent)
                         } >
                           {editableText.companyName}
                         </h2>
-                        <p className="font-light text-xs mb-3" contentEditable="true" onChange={(e) =>
-                          handleEditableTextChange("companyAddress", e.target.value)
+                        <p className="font-light text-xs mb-3" contentEditable="true" onInput={(e) =>
+                          handleEditableTextChange("companyAddress", e.target.textContent)
                         }>
                           {editableText.companyAddress}
                         </p>
                         <p className="font-light text-xs mb-5">
                           <strong>PIVA: </strong>
-                          <span contentEditable="true" onChange={(e) =>
-                            handleEditableTextChange("companyPiva", e.target.value)
+                          <span contentEditable="true" onInput={(e) =>
+                            handleEditableTextChange("companyPiva", e.target.textContent)
                           }>{editableText.companyPiva}</span>
                         </p>
                         <p className="text-xs">alla C.A.</p>
-                        <p className="text-xs font-bold" contentEditable="true" onChange={(e) =>
-                          handleEditableTextChange("contactPerson", e.target.value)
+                        <p className="text-xs font-bold" contentEditable="true" onInput={(e) =>
+                          handleEditableTextChange("contactPerson", e.target.textContent)
                         }>{editableText.contactPerson}</p>
                         <div className="mymenu mt-36">
                           <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
@@ -271,25 +258,25 @@ const PageLayout = ({ children, columns, CurrentPage }) => {
                 alt="Logo Cliente"
                 className="py-5"
               />
-              <h2 className="text-xs font-bold" contentEditable="true" onChange={(e) =>
-                handleEditableTextChange("companyName", e.target.value)
+              <h2 className="text-xs font-bold" contentEditable="true" onInput={(e) =>
+                handleEditableTextChange("companyName", e.target.textContent)
               } >
                 {editableText.companyName}
               </h2>
-              <p className="font-light text-xs mb-3" contentEditable="true" onChange={(e) =>
-                handleEditableTextChange("companyAddress", e.target.value)
+              <p className="font-light text-xs mb-3" contentEditable="true" onInput={(e) =>
+                handleEditableTextChange("companyAddress", e.target.textContent)
               }>
                 {editableText.companyAddress}
               </p>
               <p className="font-light text-xs mb-5">
                 <strong>PIVA: </strong>
-                <span contentEditable="true" onChange={(e) =>
-                  handleEditableTextChange("companyPiva", e.target.value)
+                <span contentEditable="true" onInput={(e) =>
+                  handleEditableTextChange("companyPiva", e.target.textContent)
                 }>{editableText.companyPiva}</span>
               </p>
               <p className="text-xs">alla C.A.</p>
-              <p className="text-xs font-bold" contentEditable="true" onChange={(e) =>
-                handleEditableTextChange("contactPerson", e.target.value)
+              <p className="text-xs font-bold" contentEditable="true" onInput={(e) =>
+                handleEditableTextChange("contactPerson", e.target.textContent)
               }>{editableText.contactPerson}</p>
               <div className="mymenu mt-36">
                 <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
