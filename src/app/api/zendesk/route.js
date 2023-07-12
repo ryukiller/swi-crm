@@ -41,6 +41,8 @@ export async function POST(req) {
         const body = await req.json();
         const { ticket_id, created_at, updated_at, closed_at, type } = body;
 
+        console.log(created_at)
+
         if (!ticket_id) {
             return NextResponse.json({ message: "Missing required fields" });
         }
@@ -72,10 +74,10 @@ export async function POST(req) {
 }
 
 export async function PATCH(req) {
-    const unauthorizedResponse = await verifyAccessToken(req);
-    if (unauthorizedResponse) {
-        return unauthorizedResponse;
-    }
+    // const unauthorizedResponse = await verifyAccessToken(req);
+    // if (unauthorizedResponse) {
+    //     return unauthorizedResponse;
+    // }
 
     try {
         const connection = await pool.getConnection();
