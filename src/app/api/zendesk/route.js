@@ -39,7 +39,7 @@ export async function POST(req) {
     try {
         const connection = await pool.getConnection();
         const body = await req.json();
-        let { ticket_id, created_at, updated_at, closed_at, type } = body;
+        let { ticket_id, created_at, type } = body;
 
         created_at = new Date();
 
@@ -51,10 +51,10 @@ export async function POST(req) {
 
         const results = await connection.query(
             `
-        INSERT INTO zen_tickets (ticket_id, created_at, updated_at, closed_at, type)
-        VALUES (?, ?, ?, ?, ?);
+        INSERT INTO zen_tickets (ticket_id, created_at, type)
+        VALUES (?, ?, ?);
        `,
-            [ticket_id, created_at, updated_at, closed_at, type]
+            [ticket_id, created_at, type]
         );
         connection.release();
 
@@ -84,27 +84,29 @@ export async function PATCH(req) {
 
 
 
-        if (!id) {
+        if (!ticket_id) {
             return NextResponse.json({ message: "Missing required fields" });
         }
+
+        let results;
 
         if (closed) {
             closed_at = new Date();
 
-            const results = await connection.query(
+            results = await connection.query(
                 `
-                UPDATE preventivi SET closed_at = ? WHERE ticket_id = ?;
+                UPDATE zen_tickets SET closed_at = ? WHERE ticket_id = ?;
                 `,
-                [ticket_id, closed_at]
+                [closed_at, ticket_id]
             );
         } else {
             updated_at = new Date();
 
-            const results = await connection.query(
+            results = await connection.query(
                 `
-                UPDATE preventivi SET updated_at = ?  WHERE ticket_id = ?;
+                UPDATE zen_tickets SET updated_at = ? WHERE ticket_id = ?;
                 `,
-                [ticket_id, updated_at]
+                [updated_at, ticket_id]
             );
         }
 
@@ -115,7 +117,7 @@ export async function PATCH(req) {
             return NextResponse.json({ message: "Failed to change state" });
         }
 
-        return NextResponse.json({ message: "State changed successfully" });
+        return NextResponse.json({ message: "updated successfully" });
     } catch (error) {
         console.log(error);
         return NextResponse.json({ message: "Internal server error" });
