@@ -47,16 +47,12 @@ export async function POST(req) {
             return NextResponse.json({ message: "Missing required fields" });
         }
 
+
+
         const results = await connection.query(
             `
         INSERT INTO zen_tickets (ticket_id, created_at, updated_at, closed_at, type)
-        VALUES (?, ?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE 
-        ticket_id = VALUES(ticket_id), 
-        created_at = VALUES(created_at), 
-        updated_at = VALUES(updated_at), 
-        closed_at = VALUES(closed_at), 
-        type = VALUES(type);
+        VALUES (?, ?, ?, ?, ?);
        `,
             [ticket_id, created_at, updated_at, closed_at, type]
         );
@@ -82,18 +78,37 @@ export async function PATCH(req) {
     try {
         const connection = await pool.getConnection();
         const body = await req.json();
-        const { ticket_id, updated_at, closed_at } = body;
+        let { ticket_id, updated_at, closed_at, closed } = body;
+
+
+
+
 
         if (!id) {
             return NextResponse.json({ message: "Missing required fields" });
         }
 
-        const results = await connection.query(
-            `
-         UPDATE preventivi SET updated_at = ?, closed_at = ? WHERE ticket_id = ?;
-         `,
-            [ticket_id, updated_at, closed_at]
-        );
+        if (closed) {
+            closed_at = new Date();
+
+            const results = await connection.query(
+                `
+                UPDATE preventivi SET closed_at = ? WHERE ticket_id = ?;
+                `,
+                [ticket_id, closed_at]
+            );
+        } else {
+            updated_at = new Date();
+
+            const results = await connection.query(
+                `
+                UPDATE preventivi SET updated_at = ?  WHERE ticket_id = ?;
+                `,
+                [ticket_id, updated_at]
+            );
+        }
+
+
         connection.release();
 
         if (results.affectedRows === 0) {
