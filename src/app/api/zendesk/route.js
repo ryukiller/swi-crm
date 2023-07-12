@@ -39,9 +39,9 @@ export async function POST(req) {
     try {
         const connection = await pool.getConnection();
         const body = await req.json();
-        const { ticket_id, created_at, updated_at, closed_at, type } = body;
+        let { ticket_id, created_at, updated_at, closed_at, type } = body;
 
-        console.log(created_at)
+        created_at = new Date();
 
         if (!ticket_id) {
             return NextResponse.json({ message: "Missing required fields" });
