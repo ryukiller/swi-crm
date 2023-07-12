@@ -5,6 +5,8 @@ import PreviewRenderer from "./PreviewRenderer";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
+import { FileDown, Eye, EyeOff } from 'lucide-react'
+
 function getAllParents(obj, parents = []) {
   obj.forEach(item => {
     if (item.parents && item.parents.length > 0) {
@@ -70,8 +72,8 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
   return (
     <>
       <div className="flex flex-row items-center justify-start gap-4 m-2 p-2 text-white">
-        <div className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={() => setIsPreview(!isPreview)}>Preview</div>
-        <button className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={createPDF} type="button">{isPreview ? 'scarica tuttle le pagine' : 'scarica questa pagina'}</button>
+        <div className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={() => setIsPreview(!isPreview)}>{isPreview ? (<span className="flex flex-row items-center justify-center"><Eye className="mr-2" /> Preview On</span>) : (<span className="flex flex-row items-center justify-center"><EyeOff className="mr-2" /> Preview Off</span>)}</div>
+        <button className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={createPDF} type="button">{isPreview ? (<span className="flex flex-row items-center justify-center"><FileDown className="mr-2" /> Scarica tutte le pagine</span>) : (<span className="flex flex-row items-center justify-center"><FileDown className="mr-2" /> Scarica questa pagina</span>)}</button>
       </div>
       {isPreview ? (
 
