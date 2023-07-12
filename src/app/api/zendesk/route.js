@@ -39,23 +39,35 @@ export async function POST(req) {
     try {
         const connection = await pool.getConnection();
         const body = await req.json();
-        let { ticket_id, created_at, type } = body;
+        let { ticket_id, created_at, closed_at, type } = body;
 
-        created_at = new Date();
+        //created_at = new Date();
 
         if (!ticket_id) {
             return NextResponse.json({ message: "Missing required fields" });
         }
 
+        let results;
 
-
-        const results = await connection.query(
-            `
+        if (closed_at) {
+            results = await connection.query(
+                `
+        INSERT INTO zen_tickets (ticket_id, created_at, closed_at, type)
+        VALUES (?, ?, ?, ?);
+       `,
+                [ticket_id, created_at, closed_at, type]
+            );
+        } else {
+            results = await connection.query(
+                `
         INSERT INTO zen_tickets (ticket_id, created_at, type)
         VALUES (?, ?, ?);
        `,
-            [ticket_id, created_at, type]
-        );
+                [ticket_id, created_at, type]
+            );
+        }
+
+
         connection.release();
 
         if (results.affectedRows === 0) {

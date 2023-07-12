@@ -45,6 +45,8 @@ export default function Home() {
 
   const minutesPassed = calculateTimePassed(startTimestamp, endTimestamp);
 
+
+
   return (
     <main className={styles.main}>
       <div onClick={() => console.log(minutesPassed)}>Ciao</div>
