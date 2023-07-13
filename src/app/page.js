@@ -1,5 +1,5 @@
 'use client';
-
+import { useState, useEffect } from 'react';
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from './page.module.css'
@@ -39,17 +39,47 @@ function calculateTimePassed(startTimestamp, endTimestamp) {
 
 export default function Home() {
 
-  // Example usage:
-  const startTimestamp = '2023-07-11T09:30:00Z';
-  const endTimestamp = '2023-07-12T09:30:00Z';
+  const [tickets, setTickets] = useState([]);
 
-  const minutesPassed = calculateTimePassed(startTimestamp, endTimestamp);
+  const fetchTickets = async () => {
+    const res = await fetch("/api/zendesk", {
+      method: "GET",
+    });
+    const data = await res.json();
+
+    setTickets(data);
+  };
+
+  useEffect(() => {
+    fetchTickets();
+  }, []);
+
+  // Example usage:
+
+  let totalMinutes = 0;
+  const filteredData = tickets.filter(ticket => ticket.closed_at !== null);
+
+  for (const ticket of filteredData) {
+    const { created_at, closed_at } = ticket;
+    const minutesPassed = calculateTimePassed(created_at, closed_at);
+    totalMinutes += minutesPassed;
+  }
+
+  const averageCompletionTime = totalMinutes / filteredData.length;
 
 
 
   return (
     <main className={styles.main}>
-      <div onClick={() => console.log(minutesPassed)}>Ciao</div>
+      <div onClick={() => console.log(minutesPassed)}>Tempo di risoluzione contando solo ore/giorni lavorativi:
+        <ul>
+          <li>Numero ticket: {tickets.length}</li>
+          <li>Ticket completati: {filteredData.length}</li>
+          <li>Ticket non risolti: {tickets.length - filteredData.length}</li>
+          <li>Minuti in media: {averageCompletionTime.toFixed(2)}</li>
+          <li>Ore in media: {averageCompletionTime.toFixed(2) / 60}</li>
+        </ul>
+      </div>
     </main >
   )
 }
