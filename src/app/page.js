@@ -77,7 +77,7 @@ export default function Home() {
           <li>Ticket completati: {filteredData.length}</li>
           <li>Ticket non risolti: {tickets.length - filteredData.length}</li>
           <li>Minuti in media: {averageCompletionTime.toFixed(2)}</li>
-          <li>Ore in media: {averageCompletionTime.toFixed(2) / 60}</li>
+          <li>Ore in media: {(averageCompletionTime / 60).toFixed(2)}</li>
         </ul>
       </div>
     </main >
