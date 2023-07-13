@@ -41,6 +41,7 @@
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
     "react-dropzone": "^14.2.3",
+    "rsuite": "^5.37.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
