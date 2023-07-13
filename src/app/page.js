@@ -71,7 +71,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <div onClick={() => console.log(minutesPassed)}>Tempo di risoluzione contando solo ore/giorni lavorativi:
+      <div>Tempo di risoluzione contando solo ore/giorni lavorativi:
         <ul>
           <li>Numero ticket: {tickets.length}</li>
           <li>Ticket completati: {filteredData.length}</li>
