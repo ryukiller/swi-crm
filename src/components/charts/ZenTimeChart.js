@@ -27,7 +27,7 @@ const ZenTimeChart = ({ averageCompletionTime, closedDates }) => {
         datasets: [
             {
                 label: 'Ore',
-                data: averageCompletionTime.map((item) => item / 60),
+                data: averageCompletionTime,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
