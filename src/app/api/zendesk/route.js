@@ -91,7 +91,7 @@ export async function PATCH(req) {
         let results;
 
         if (closed) {
-            closed_at = new Date();
+            closed_at = new Date().toLocaleString("it-IT", { timeZone: "Europe/Rome" });
 
             results = await connection.query(
                 `
@@ -100,7 +100,7 @@ export async function PATCH(req) {
                 [closed_at, ticket_id]
             );
         } else {
-            updated_at = new Date();
+            updated_at = new Date().toLocaleString("it-IT", { timeZone: "Europe/Rome" });;
 
             results = await connection.query(
                 `
