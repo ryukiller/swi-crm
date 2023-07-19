@@ -13,72 +13,78 @@ import { DateRangePicker } from 'rsuite';
 
 const inter = Inter({ subsets: ['latin'] })
 
-function calculateTimePassed(startTimestamp, endTimestamp) {
-  // Check if start date is after end date, if so, swap them
-  if (startTimestamp > endTimestamp) {
-    let temp = startTimestamp;
-    startTimestamp = endTimestamp;
-    endTimestamp = temp;
-  }
+function formatDate(date) {
+  // Array of month names, shorten to 3 characters
+  const monthNames = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
 
+  // get day of the month, month, and year from the date
+  const day = date.getDate();
+  const monthIndex = date.getMonth();
+  const year = date.getFullYear().toString().substr(-2);  // last 2 digits of year
+
+  // return formatted date
+  return `${day} ${monthNames[monthIndex]} ${year}`;
+}
+
+function calculateTimePassed(startTimestamp, endTimestamp) {
   // Convert timestamps to Date objects
   const startDate = new Date(startTimestamp);
   const endDate = new Date(endTimestamp);
 
-  let totalMinutes = 0;
-
-  if (endDate.getHours() > 18 || endDate.getHours() < 9 || endDate.getHours() === 0) {
-    endDate.setHours(13);
-    // console.log('hit end: ' + endDate.getHours())
+  if (startDate === endDate) {
+    endDate.setHours(13)
   }
 
-  if (startDate.getHours() < 9 || startDate.getHours() > 18 || startDate.getHours() === 0) {
-    startDate.setHours(9);
-    startDate.setMinutes(0);
-    // console.log('hit start: ' + startDate.getHours())
+  if (endDate.getHours() === 0) {
+    endDate.setHours(13)
   }
-  //console.log(startDate.getHours(), endDate.getHours())
 
-  // if (startDate.getDay() === 0 || startDate.getDay() === 6) {
-  //   if (endDate.getDay() === 1 && endDate.getHours() === 0) {
-  //     totalMinutes += 240; // add 4 hours (240 minutes)
-  //     return totalMinutes;
-  //   }
-  // }
-
-
-
-  // if (startDate.toDateString() === endDate.toDateString() && startDate.getHours() === 0 && endDate.getHours() === 0) {
-  //   startDate.setHours(9);
-  //   endDate.setHours(13); // assume it's an 8 hour workday
-  // }
-
-
-
-
-  // Iterate over each day in the range
-  for (let d = new Date(startDate); d <= endDate; d.setMinutes(d.getMinutes() + 1)) {
-    // If it's a working day (not Saturday or Sunday)
-    if (d.getDay() !== 0 && d.getDay() !== 6) {
-      // If it's working hours (from 9:00 AM to 12:00 PM and from 1:00 PM to 6:00 PM)
-      if ((d.getHours() >= 9 && d.getHours() < 13) || (d.getHours() >= 14 && d.getHours() < 18)) {
-        // Add this hour to the total
-        if (endDate.getMinutes() != 0 && startDate.getMinutes() != 0) {
-
-          totalMinutes = endDate.getMinutes() - startDate.getMinutes();
-          console.log('total: ' + endDate.getMinutes(), startDate.getMinutes())
-        } else {
-          totalMinutes += 1;
+  // Normalise the time to 9:00 on a working day if before/after working hours or on a weekend
+  function normaliseDate(d) {
+    if (d.getHours() < 9 || d.getHours() > 18 || d.getDay() === 0 || d.getDay() === 6) {
+      if (d.getHours() < 9 || d.getDay() === 0 || d.getDay() === 6) {
+        d.setHours(9);
+        d.setMinutes(0);
+        if (d.getDay() === 0) {
+          d.setDate(d.getDate() + 1);
+        } else if (d.getDay() === 6) {
+          d.setDate(d.getDate() + 2);
         }
+      } else if (d.getHours() > 18) {
+        d.setHours(13);
+        d.setMinutes(0);
+        d.setDate(d.getDate() + 1);
       }
     }
+    return d;
   }
 
+  const start = normaliseDate(startDate);
+  const end = normaliseDate(endDate);
 
-
-
+  // Calculate total minutes
+  let totalMinutes = 0;
+  while (start <= end) {
+    // If it's a working day (not Saturday or Sunday)
+    if (start.getDay() !== 0 && start.getDay() !== 6) {
+      // If it's working hours (from 9:00 AM to 6:00 PM)
+      if (start.getHours() >= 9 && start.getHours() < 18) {
+        totalMinutes++;
+      } else if (start.getHours() >= 18) {
+        start.setHours(9);
+        start.setMinutes(0);
+        start.setDate(start.getDate() + 1);
+        continue;
+      }
+    } else {
+      start.setDate(start.getDate() + 1);
+      continue;
+    }
+    start.setMinutes(start.getMinutes() + 1);
+  }
   return totalMinutes;
 }
+
 
 
 export default function Home() {
@@ -191,7 +197,7 @@ export default function Home() {
             <div className="stat">
               <div className="stat-title">Numero ticket</div>
               <div className="stat-value">{numeroTickets}</div>
-              <div className="stat-desc">3 Apr 23 - Oggi</div>
+              <div className="stat-desc">{range ? formatDate(range[0]) + ' - ' + formatDate(range[1]) : '3 Apr 23 - Oggi'}</div>
             </div>
 
             <div className="stat">
