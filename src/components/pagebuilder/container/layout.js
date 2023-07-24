@@ -1,11 +1,11 @@
+import { Eye, EyeOff, FileDown } from 'lucide-react'
 import { useEffect, useState } from "react";
 
+import EditableText from "./layout/EditableText";
 import Image from "next/image";
 import PreviewRenderer from "./PreviewRenderer";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-
-import { FileDown, Eye, EyeOff } from 'lucide-react'
 
 function getAllParents(obj, parents = []) {
   obj.forEach(item => {
@@ -64,6 +64,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
       [key]: value,
     }));
   };
+  
 
   const [isPreview, setIsPreview] = useState(false);
 
@@ -96,22 +97,33 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                           alt="Logo Cliente"
                           className="py-5"
                         />
-                        <h2 className="text-xs font-bold" contentEditable="true" onInput={(e) =>
-                          handleEditableTextChange("companyName", e.target.textContent)
-                        } >
-                          {editableText.companyName}
-                        </h2>
-                        <p className="font-light text-xs mb-3" contentEditable="true" onInput={(e) =>
-                          handleEditableTextChange("companyAddress", e.target.textContent)
-                        }>
-                          {editableText.companyAddress}
-                        </p>
-                        <p className="font-light text-xs mb-5">
-                          <strong>PIVA: </strong>
-                          <span contentEditable="true" onInput={(e) =>
-                            handleEditableTextChange("companyPiva", e.target.textContent)
-                          }>{editableText.companyPiva}</span>
-                        </p>
+                        <EditableText
+                          className="text-xs font-bold"
+                          tagType="h2"
+                          initialText={editableText.companyName}
+                          handleEditableTextChange={handleEditableTextChange}
+                          textKey="companyName"
+                        />
+
+                        <EditableText
+                          className="font-light text-xs mb-3"
+                          tagType="p"
+                          initialText={editableText.companyAddress}
+                          handleEditableTextChange={handleEditableTextChange}
+                          textKey="companyAddress"
+                        />
+
+                        <EditableText
+                          className="font-light text-xs mb-5"
+                          tagType="p"
+                          initialText={editableText.companyPiva}
+                          handleEditableTextChange={handleEditableTextChange}
+                          textKey="companyPiva"
+                          children={
+                            <strong>PIVA: </strong>
+                          }
+                        />
+                        
                         <p className="text-xs">alla C.A.</p>
                         <p className="text-xs font-bold" contentEditable="true" onInput={(e) =>
                           handleEditableTextChange("contactPerson", e.target.textContent)
@@ -179,7 +191,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                         <p className="text-sm font-light">www.swi.it</p>
                         <h4 className="font-bold text-xs mt-5">SWI Agency</h4>
                         <p className="font-light text-xs mb-5">
-                          Viale Duca d’Aosta, 16 21052 Busto Arsizio (VA) <br />
+                          Via Piave, 15/17, 20027 Rescaldina MI <br />
                           Tel. 0331 320873
                           <br />
                           Fax. 0331 636278 <br />
@@ -260,26 +272,40 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                 alt="Logo Cliente"
                 className="py-5"
               />
-              <h2 className="text-xs font-bold" contentEditable="true" onInput={(e) =>
-                handleEditableTextChange("companyName", e.target.textContent)
-              } >
-                {editableText.companyName}
-              </h2>
-              <p className="font-light text-xs mb-3" contentEditable="true" onInput={(e) =>
-                handleEditableTextChange("companyAddress", e.target.textContent)
-              }>
-                {editableText.companyAddress}
-              </p>
-              <p className="font-light text-xs mb-5">
-                <strong>PIVA: </strong>
-                <span contentEditable="true" onInput={(e) =>
-                  handleEditableTextChange("companyPiva", e.target.textContent)
-                }>{editableText.companyPiva}</span>
-              </p>
+                <EditableText
+                  className="text-xs font-bold"
+                  tagType="h2"
+                  initialText={editableText.companyName}
+                  handleEditableTextChange={handleEditableTextChange}
+                  textKey="companyName"
+                />
+
+                <EditableText
+                  className="font-light text-xs mb-3"
+                  tagType="p"
+                  initialText={editableText.companyAddress}
+                  handleEditableTextChange={handleEditableTextChange}
+                  textKey="companyAddress"
+                />
+
+                <EditableText
+                  className="font-light text-xs mb-5"
+                  tagType="p"
+                  initialText={editableText.companyPiva}
+                  handleEditableTextChange={handleEditableTextChange}
+                  textKey="companyPiva"
+                  children={
+                    <strong>PIVA: </strong>
+                  }
+                />
               <p className="text-xs">alla C.A.</p>
-              <p className="text-xs font-bold" contentEditable="true" onInput={(e) =>
-                handleEditableTextChange("contactPerson", e.target.textContent)
-              }>{editableText.contactPerson}</p>
+                <EditableText
+                  className="text-xs font-bold"
+                  tagType="p"
+                  initialText={editableText.contactPerson}
+                  handleEditableTextChange={handleEditableTextChange}
+                  textKey="contactPerson"
+                />
               <div className="mymenu mt-36">
                 <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
                 <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
@@ -343,7 +369,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
               <p className="text-sm font-light">www.swi.it</p>
               <h4 className="font-bold text-xs mt-5">SWI Agency</h4>
               <p className="font-light text-xs mb-5">
-                Viale Duca d’Aosta, 16 21052 Busto Arsizio (VA) <br />
+                Via Piave, 15/17, 20027 Rescaldina MI <br />
                 Tel. 0331 320873
                 <br />
                 Fax. 0331 636278 <br />

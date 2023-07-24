@@ -368,9 +368,9 @@ const PageBuilder = ({ quote_id }) => {
       agencyFax: "Fax. 0331 636278",
       agencyEmail: "Mail info@swi.it",
       preventivoDate:"",
-      preventivoTitle: "",
-      preventivoSubitle: "",
-      preventivoMessage:"",
+      preventivoTitle: "PREVENTIVO",
+      preventivoSubitle: "per fornitura servizi",
+      preventivoMessage: "Con riferimento alla Vs. richiesta, ringraziandoVi della preferenza abbiamo il piacere di formularvi la seguente proposta:",
     }
   });
 
