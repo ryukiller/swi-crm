@@ -223,17 +223,40 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                         </div>
                         <div>
                           <div className="w-20 h-[2px] bg-primary my-2"></div>
-                          <h2 className="text-3xl font-bold text-primary tracking-widest uppercase">
-                            Preventivo
-                          </h2>
-                          <p className="text-lg text-secondary">per fornitura servizi</p>
+                          <EditableText
+                            className="text-3xl font-bold text-primary tracking-widest uppercase"
+                            tagType="h2"
+                            initialText={editableText.preventivoTitle}
+                            handleEditableTextChange={handleEditableTextChange}
+                            textKey="preventivoTitle"
+                          />
+
+                          <EditableText
+                            className="text-lg text-secondary"
+                            tagType="p"
+                            initialText={editableText.preventivoSubitle}
+                            handleEditableTextChange={handleEditableTextChange}
+                            textKey="preventivoSubitle"
+                          />
+
+
                           <div className="flex justify-end mt-[-10px] mb-8 font-light text-sm">
-                            <p>22 Maggio 2023</p>
+                            <EditableText
+                              className=""
+                              tagType="p"
+                              initialText={editableText.preventivoDate}
+                              handleEditableTextChange={handleEditableTextChange}
+                              textKey="preventivoDate"
+                            />
                           </div>
-                          <p className="text-sm font-light mb-12">
-                            Con riferimento alla Vs. richiesta, ringraziandoVi della
-                            preferenza abbiamo il piacere di formularvi la seguente proposta:
-                          </p>
+
+                          <EditableText
+                            className="text-sm font-light mb-12"
+                            tagType="p"
+                            initialText={editableText.preventivoMessage}
+                            handleEditableTextChange={handleEditableTextChange}
+                            textKey="preventivoMessage"
+                          />
                         </div>
                       </div>
                       <div className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding">
@@ -401,17 +424,41 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
               </div>
               <div>
                 <div className="w-20 h-[2px] bg-primary my-2"></div>
-                <h2 className="text-3xl font-bold text-primary tracking-widest uppercase">
-                  Preventivo
-                </h2>
-                <p className="text-lg text-secondary">per fornitura servizi</p>
+                  <EditableText
+                    className="text-3xl font-bold text-primary tracking-widest uppercase"
+                    tagType="h2"
+                    initialText={editableText.preventivoTitle}
+                    handleEditableTextChange={handleEditableTextChange}
+                    textKey="preventivoTitle"
+                  />
+
+                  <EditableText
+                    className="text-lg text-secondary"
+                    tagType="p"
+                    initialText={editableText.preventivoSubitle}
+                    handleEditableTextChange={handleEditableTextChange}
+                    textKey="preventivoSubitle"
+                  />
+
+                 
                 <div className="flex justify-end mt-[-10px] mb-8 font-light text-sm">
-                  <p>22 Maggio 2023</p>
+                    <EditableText
+                      className=""
+                      tagType="p"
+                      initialText={editableText.preventivoDate}
+                      handleEditableTextChange={handleEditableTextChange}
+                      textKey="preventivoDate"
+                    />
                 </div>
-                <p className="text-sm font-light mb-12">
-                  Con riferimento alla Vs. richiesta, ringraziandoVi della
-                  preferenza abbiamo il piacere di formularvi la seguente proposta:
-                </p>
+
+                  <EditableText
+                    className="text-sm font-light mb-12"
+                    tagType="p"
+                    initialText={editableText.preventivoMessage}
+                    handleEditableTextChange={handleEditableTextChange}
+                    textKey="preventivoMessage"
+                  />
+
               </div>
             </div>
             {children}

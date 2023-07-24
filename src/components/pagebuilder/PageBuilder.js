@@ -34,6 +34,36 @@ import axios from "axios";
 import { stateToHTML } from "draft-js-export-html";
 import { v4 as uuidv4 } from "uuid";
 
+function itDate(dateStr) {
+  const months = [
+    "gennaio",
+    "febbraio",
+    "marzo",
+    "aprile",
+    "maggio",
+    "giugno",
+    "luglio",
+    "agosto",
+    "settembre",
+    "ottobre",
+    "novembre",
+    "dicembre"
+  ];
+
+  try {
+    const dateObj = new Date(dateStr);
+    const day = dateObj.getDate();
+    const month = months[dateObj.getMonth()];
+    const year = dateObj.getFullYear();
+    const formattedDate = `${day} ${month} ${year}`;
+    return formattedDate;
+  } catch (error) {
+    return "Invalid date format. Please use 'YYYY-MM-DD'.";
+  }
+}
+
+const dateIt = itDate(new Date())
+
 const ComponentRenderer = ({ item, index, innerListItems, isEdit }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [content, setContent] = useState(item.content);
@@ -367,7 +397,7 @@ const PageBuilder = ({ quote_id }) => {
       agencyTel: "Tel. 0331 320873",
       agencyFax: "Fax. 0331 636278",
       agencyEmail: "Mail info@swi.it",
-      preventivoDate:"",
+      preventivoDate: dateIt,
       preventivoTitle: "PREVENTIVO",
       preventivoSubitle: "per fornitura servizi",
       preventivoMessage: "Con riferimento alla Vs. richiesta, ringraziandoVi della preferenza abbiamo il piacere di formularvi la seguente proposta:",
