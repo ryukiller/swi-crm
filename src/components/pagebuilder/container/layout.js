@@ -64,7 +64,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
       [key]: value,
     }));
   };
-  
+
 
   const [isPreview, setIsPreview] = useState(false);
 
@@ -119,11 +119,10 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                           initialText={editableText.companyPiva}
                           handleEditableTextChange={handleEditableTextChange}
                           textKey="companyPiva"
-                          children={
-                            <strong>PIVA: </strong>
-                          }
-                        />
-                        
+                        >
+                          <strong>PIVA: </strong>
+                        </EditableText>
+
                         <p className="text-xs">alla C.A.</p>
                         <p className="text-xs font-bold" contentEditable="true" onInput={(e) =>
                           handleEditableTextChange("contactPerson", e.target.textContent)
@@ -295,40 +294,40 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                 alt="Logo Cliente"
                 className="py-5"
               />
-                <EditableText
-                  className="text-xs font-bold"
-                  tagType="h2"
-                  initialText={editableText.companyName}
-                  handleEditableTextChange={handleEditableTextChange}
-                  textKey="companyName"
-                />
+              <EditableText
+                className="text-xs font-bold"
+                tagType="h2"
+                initialText={editableText.companyName}
+                handleEditableTextChange={handleEditableTextChange}
+                textKey="companyName"
+              />
 
-                <EditableText
-                  className="font-light text-xs mb-3"
-                  tagType="p"
-                  initialText={editableText.companyAddress}
-                  handleEditableTextChange={handleEditableTextChange}
-                  textKey="companyAddress"
-                />
+              <EditableText
+                className="font-light text-xs mb-3"
+                tagType="p"
+                initialText={editableText.companyAddress}
+                handleEditableTextChange={handleEditableTextChange}
+                textKey="companyAddress"
+              />
 
-                <EditableText
-                  className="font-light text-xs mb-5"
-                  tagType="p"
-                  initialText={editableText.companyPiva}
-                  handleEditableTextChange={handleEditableTextChange}
-                  textKey="companyPiva"
-                  children={
-                    <strong>PIVA: </strong>
-                  }
-                />
+              <EditableText
+                className="font-light text-xs mb-5"
+                tagType="p"
+                initialText={editableText.companyPiva}
+                handleEditableTextChange={handleEditableTextChange}
+                textKey="companyPiva"
+              >
+                <strong>PIVA: </strong>
+              </EditableText>
+
               <p className="text-xs">alla C.A.</p>
-                <EditableText
-                  className="text-xs font-bold"
-                  tagType="p"
-                  initialText={editableText.contactPerson}
-                  handleEditableTextChange={handleEditableTextChange}
-                  textKey="contactPerson"
-                />
+              <EditableText
+                className="text-xs font-bold"
+                tagType="p"
+                initialText={editableText.contactPerson}
+                handleEditableTextChange={handleEditableTextChange}
+                textKey="contactPerson"
+              />
               <div className="mymenu mt-36">
                 <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
                 <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
@@ -424,40 +423,40 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
               </div>
               <div>
                 <div className="w-20 h-[2px] bg-primary my-2"></div>
-                  <EditableText
-                    className="text-3xl font-bold text-primary tracking-widest uppercase"
-                    tagType="h2"
-                    initialText={editableText.preventivoTitle}
-                    handleEditableTextChange={handleEditableTextChange}
-                    textKey="preventivoTitle"
-                  />
+                <EditableText
+                  className="text-3xl font-bold text-primary tracking-widest uppercase"
+                  tagType="h2"
+                  initialText={editableText.preventivoTitle}
+                  handleEditableTextChange={handleEditableTextChange}
+                  textKey="preventivoTitle"
+                />
 
-                  <EditableText
-                    className="text-lg text-secondary"
-                    tagType="p"
-                    initialText={editableText.preventivoSubitle}
-                    handleEditableTextChange={handleEditableTextChange}
-                    textKey="preventivoSubitle"
-                  />
+                <EditableText
+                  className="text-lg text-secondary"
+                  tagType="p"
+                  initialText={editableText.preventivoSubitle}
+                  handleEditableTextChange={handleEditableTextChange}
+                  textKey="preventivoSubitle"
+                />
 
-                 
+
                 <div className="flex justify-end mt-[-10px] mb-8 font-light text-sm">
-                    <EditableText
-                      className=""
-                      tagType="p"
-                      initialText={editableText.preventivoDate}
-                      handleEditableTextChange={handleEditableTextChange}
-                      textKey="preventivoDate"
-                    />
+                  <EditableText
+                    className=""
+                    tagType="p"
+                    initialText={editableText.preventivoDate}
+                    handleEditableTextChange={handleEditableTextChange}
+                    textKey="preventivoDate"
+                  />
                 </div>
 
-                  <EditableText
-                    className="text-sm font-light mb-12"
-                    tagType="p"
-                    initialText={editableText.preventivoMessage}
-                    handleEditableTextChange={handleEditableTextChange}
-                    textKey="preventivoMessage"
-                  />
+                <EditableText
+                  className="text-sm font-light mb-12"
+                  tagType="p"
+                  initialText={editableText.preventivoMessage}
+                  handleEditableTextChange={handleEditableTextChange}
+                  textKey="preventivoMessage"
+                />
 
               </div>
             </div>

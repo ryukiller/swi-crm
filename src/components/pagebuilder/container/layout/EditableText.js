@@ -25,7 +25,7 @@ const EditableText = ({ initialText, tagType, className, handleEditableTextChang
         <>
             {isEditing ? (
                 <input
-                    className={className}
+                    className={`block w-auto bg-transparent border-b-2 border-slate-700 outline-none pb-1 ${className}`}
                     type="text"
                     value={editedText}
                     onChange={handleTextChange}
