@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import RgEditor from '../Editor';
+import { FileEdit, Save } from 'lucide-react';
 
-const EditableText = ({ initialText, tagType, className, handleEditableTextChange, textKey, children }) => {
+const EditableText = ({ initialText, tagType, className, handleEditableTextChange, textKey, inside }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(initialText);
 
@@ -8,8 +10,9 @@ const EditableText = ({ initialText, tagType, className, handleEditableTextChang
         setIsEditing(true);
     };
 
-    const handleTextChange = (e) => {
-        setEditedText(e.target.value);
+    const handleTextChange = (e, htmlContent) => {
+
+        setEditedText(htmlContent);
     };
 
     const handleBlur = () => {
@@ -22,28 +25,37 @@ const EditableText = ({ initialText, tagType, className, handleEditableTextChang
     }, [initialText]);
 
     return (
-        <>
+        <div className="group relative hover:border-[1px] border-dashed border-slate-900">
+            <div
+                className="hidden group-hover:flex absolute right-[-15px] top-[-15px] bg-slate-600 p-1 text-white rounded-md cursor-pointer"
+                onClick={() => {
+                    handleEditableTextChange(textKey, editedText)
+                    setIsEditing(!isEditing)
+                }}
+            >
+                {isEditing ? <Save size={16} strokeWidth={1.5} /> : <FileEdit size={16} strokeWidth={1.5} />}
+            </div>
             {isEditing ? (
-                <input
-                    className={`block w-auto bg-transparent border-b-2 border-slate-700 outline-none pb-1 ${className}`}
-                    type="text"
-                    value={editedText}
-                    onChange={handleTextChange}
-                    onBlur={handleBlur}
-                    autoFocus
-                />
+                <div className={`block w-auto bg-transparent outline-none ${className}`}>
+                    <RgEditor
+                        onEditChange={handleTextChange}
+                        content={editedText}
+                    />
+                </div>
             ) : (
                 React.createElement(
                     tagType,
                     {
                         onDoubleClick: handleDoubleClick,
-                        className: className
+                        className: className,
+                        dangerouslySetInnerHTML: {
+                            __html: inside ? `<b>${inside}</b>` + editedText : editedText,
+                        }
                     },
-                    children,
-                    editedText
+
                 )
             )}
-        </>
+        </div>
     );
 };
 

@@ -15,7 +15,15 @@ import "@draft-js-plugins/inline-toolbar/lib/plugin.css";
 
 const text = "lorem lipsum dolor...";
 
-const RgEditor = ({ content, onEditChange }) => {
+const stripHTMLTags = (str) => {
+  if ((str === null) || (str === ''))
+    return false;
+  else
+    str = str.toString();
+  return str.replace(/<[^>]*>/g, '');
+}
+
+const RgEditor = ({ content, onEditChange, onlyText }) => {
   const linkPlugin = createLinkPlugin();
   const [plugins, InlineToolbar] = useMemo(() => {
     const inlineToolbarPlugin = createInlineToolbarPlugin();
@@ -31,7 +39,7 @@ const RgEditor = ({ content, onEditChange }) => {
   );
 
   useEffect(() => {
-    const blocksFromHTML = convertFromHTML(content);
+    const blocksFromHTML = onlyText ? convertFromHTML(stripHTMLTags(content)) : convertFromHTML(content);
     const state = ContentState.createFromBlockArray(
       blocksFromHTML.contentBlocks,
       blocksFromHTML.entityMap

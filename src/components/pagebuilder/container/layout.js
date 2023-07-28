@@ -58,7 +58,6 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
   };
 
   const handleEditableTextChange = (key, value) => {
-    console.log(editableText)
     textChange((prevEditableText) => ({
       ...prevEditableText,
       [key]: value,
@@ -85,7 +84,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
               .filter((item) => item.state !== false)
               .filter((item) => !allParents.includes(item.id))
               .map((item, index) => {
-
+                console.log(item)
                 return (
                   <div key={index} className="canvaspage flex bg-white w-[1240px] h-[1754px] my-10">
                     <div className="w-3/12 bg-[#f3f3f3ff] flex flex-col align-middle p-8 justify-between">
@@ -97,6 +96,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                           alt="Logo Cliente"
                           className="py-5"
                         />
+
                         <EditableText
                           className="text-xs font-bold"
                           tagType="h2"
@@ -119,20 +119,23 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                           initialText={editableText.companyPiva}
                           handleEditableTextChange={handleEditableTextChange}
                           textKey="companyPiva"
-                        >
-                          <strong>PIVA: </strong>
-                        </EditableText>
+                          inside="PIVA: "
+                        />
 
                         <p className="text-xs">alla C.A.</p>
-                        <p className="text-xs font-bold" contentEditable="true" onInput={(e) =>
-                          handleEditableTextChange("contactPerson", e.target.textContent)
-                        }>{editableText.contactPerson}</p>
+                        <EditableText
+                          className="text-xs font-bold"
+                          tagType="p"
+                          initialText={editableText.contactPerson}
+                          handleEditableTextChange={handleEditableTextChange}
+                          textKey="contactPerson"
+                        />
                         <div className="mymenu mt-36">
                           <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
                           <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
                           <p className="text-sm font-light">dei servizi offerti</p>
                           <ul className="">
-                            {columns.pages.map((page) => {
+                            {columns.pages.map((page, index) => {
                               let imgsrc = "/imgs/icon-1.png"
 
                               switch (page.id) {
@@ -159,12 +162,9 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
 
                               }
 
-                              //console.log(columns.pages[item - 1].parents, page.id)
-
-
                               return (
                                 page.state && (
-                                  <li className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[item.id - 1].parents.includes(page.id) || item.id === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
+                                  <li key={index} className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[item.id - 1].parents.includes(page.id) || item.id === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
                                     {page.title}
                                     <br />
                                     {page.subtitle}
@@ -261,18 +261,15 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                       <div className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding">
                         {item.title}
                       </div>
-                      {item.items.map((preview, index) => (
+                      {item.items.map((preview, index) => <PreviewRenderer key={index} item={preview} />)}
+
+                      {item.parents.map((parents, index) => (
                         <div key={index}>
-                          <PreviewRenderer item={preview} />
-                          {item.parents.map((parents, index) => (
-                            <div key={index}>
-                              <div className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding">
-                                {columns.pages[parents - 1].title}
-                              </div>
-                              {columns.pages[parents - 1].items.map((previewinner, index) => (
-                                <PreviewRenderer key={index} item={previewinner} />
-                              ))}
-                            </div>
+                          <div className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding mt-10">
+                            {columns.pages[parents - 1].title}
+                          </div>
+                          {columns.pages[parents - 1].items.map((previewinner, index) => (
+                            <PreviewRenderer key={index} item={previewinner} />
                           ))}
                         </div>
                       ))}
@@ -316,9 +313,8 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                 initialText={editableText.companyPiva}
                 handleEditableTextChange={handleEditableTextChange}
                 textKey="companyPiva"
-              >
-                <strong>PIVA: </strong>
-              </EditableText>
+                inside="PIVA: "
+              />
 
               <p className="text-xs">alla C.A.</p>
               <EditableText
@@ -333,7 +329,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                 <h3 className="font-bold uppercase text-lg">Dettaglio</h3>
                 <p className="text-sm font-light">dei servizi offerti</p>
                 <ul className="">
-                  {columns.pages.map((page) => {
+                  {columns.pages.map((page, index) => {
                     let imgsrc = "/imgs/icon-1.png"
 
                     switch (page.id) {
@@ -360,12 +356,10 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
 
                     }
 
-                    console.log(columns.pages[CurrentPage - 1].parents, page.id)
-
 
                     return (
                       page.state && (
-                        <li className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
+                        <li key={index} className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
                           {page.title}
                           <br />
                           {page.subtitle}

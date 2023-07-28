@@ -69,7 +69,7 @@ const ComponentRenderer = ({ item, index, innerListItems, isEdit }) => {
   const [content, setContent] = useState(item.content);
   let mycontent = item.content;
   //console.log(item);
-  if (item.type === "elenco") {
+  if (item.type === "elenco" || item.type === "totale") {
     mycontent = "";
   }
 
@@ -181,7 +181,11 @@ const ComponentRenderer = ({ item, index, innerListItems, isEdit }) => {
           />
         );
       case "totale":
-        return <Totale content={content} />;
+        return <Totale
+          content={edits}
+          isEdit={isEdit}
+          onSaveEdits={handleEditsChange}
+        />;
       case "hero":
         return (
           <div className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 p-8 rounded">
@@ -312,7 +316,12 @@ const reusableComponents = [
         id: "18",
         type: "totale",
         title: "Totale",
-        content: "Totale",
+        content: {
+          title: "Totale",
+          prezzo: "4500",
+          ivainclusa: "false",
+          info: "(valido per 10 anni)"
+        },
       },
     ],
   },
@@ -386,7 +395,7 @@ const PageBuilder = ({ quote_id }) => {
       parents: []
     },
     pageInfo: {
-      companyLogo:"",
+      companyLogo: "",
       companyName: "ELLEDI Spa",
       companyAddress: "Via Padergnone, 27 24050 Grassobbio (BG)",
       companyPiva: "P.iva IT01610020164",
@@ -405,7 +414,7 @@ const PageBuilder = ({ quote_id }) => {
   });
 
 
-  
+
 
   const EditMenu = ({ children, itemId, columns, editingId, setEditingId }) => {
     const [isHover, setIsHover] = useState(false);
@@ -617,7 +626,7 @@ const PageBuilder = ({ quote_id }) => {
   };
 
   useEffect(() => {
-    loadPage();  
+    loadPage();
   }, []);
 
 
@@ -942,10 +951,12 @@ const PageBuilder = ({ quote_id }) => {
     const itemsWithParents = new Set();
 
     for (const item of array) {
-      if (item.parents.length > 0) {
-        itemsWithParents.add(item.id);
-        for (const parentId of item.parents) {
-          allParentIds.add(parentId);
+      if (item.length > 0) {
+        if (item.parents.length > 0) {
+          itemsWithParents.add(item.id);
+          for (const parentId of item.parents) {
+            allParentIds.add(parentId);
+          }
         }
       }
     }
@@ -953,7 +964,7 @@ const PageBuilder = ({ quote_id }) => {
     return [allParentIds, itemsWithParents];
   }
 
-  
+
 
   const Sidebar = () => {
 
@@ -1204,7 +1215,7 @@ const PageBuilder = ({ quote_id }) => {
 
                       ))}
                     <div>
-                      {columns.pages[CurrentPage - 1].parents.map(
+                      {columns.pages[CurrentPage - 1].parents && columns.pages[CurrentPage - 1].parents.map(
                         (item, index) => (
                           <>
                             <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
