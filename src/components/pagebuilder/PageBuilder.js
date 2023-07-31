@@ -34,6 +34,8 @@ import axios from "axios";
 import { stateToHTML } from "draft-js-export-html";
 import { v4 as uuidv4 } from "uuid";
 
+import RgEditor from "./container/Editor"
+
 function itDate(dateStr) {
   const months = [
     "gennaio",
@@ -358,6 +360,10 @@ const PageBuilder = ({ quote_id }) => {
   const [CurrentPage, setCurrentPage] = useState(1);
   const [isChildDragging, setIsChildDragging] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  const [title, setTitle] = useState('')
+  const [editingTitle, setEditingTitle] = useState(false)
+
   useEffect(() => {
     if (editingId) {
       setIsChildDragging(true);
@@ -1105,6 +1111,30 @@ const PageBuilder = ({ quote_id }) => {
     );
   };
 
+
+
+  const handleTitleChange = (newval, id) => {
+    console.log(newval, id)
+    const updatedPages = columns.pages.map((page) => {
+      if (page.id === id.toString()) {
+        console.log(page)
+        return { ...page, title: newval }; // Create a new object with the updated title
+      }
+      return page;
+    });
+
+    console.log(updatedPages)
+
+    setColumns((prevColumns) => ({
+      ...prevColumns,
+      pages: updatedPages,
+    }));
+
+    setTitle('')
+    setEditingTitle(false)
+  };
+
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex">
@@ -1165,12 +1195,26 @@ const PageBuilder = ({ quote_id }) => {
                   </div>
                 </div>
                 <PageLayout columns={columns} CurrentPage={CurrentPage} editableText={editableText} textChange={handleTextChange}>
-                  <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
-                    {
-                      columns.pages.find(
-                        (item) => Number(item.id) === Number(CurrentPage)
-                      ).title
+
+                  <h1 className="bg-primary text-white uppercase p-3 py-2 my-6" onDoubleClick={() => (
+                    setTitle(columns.pages.find(
+                      (item) => Number(item.id) === Number(CurrentPage)
+                    ).title),
+                    setEditingTitle(!editingTitle)
+                  )
+                  }>
+
+                    {editingTitle ?
+                      (
+                        <input type="text" value={title} className="bg-transparent border-0 w-full" onChange={(e) => setTitle(e.target.value)} onBlur={(e) => handleTitleChange(e.target.value, CurrentPage)} />
+                      ) :
+                      (
+                        columns.pages.find(
+                          (item) => Number(item.id) === Number(CurrentPage)
+                        ).title
+                      )
                     }
+
                   </h1>
                   <div
                     className={`bg-white min-h-screen w-full p-[1px] rounded-sm space-y-2 border-[1px] border-dashed  ${snapshot.isDraggingOver
@@ -1219,7 +1263,7 @@ const PageBuilder = ({ quote_id }) => {
                         (item, index) => (
                           <>
                             <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
-                              {columns.pages[item - 1].title}
+                              <input type="text" value={columns.pages[item - 1].title} className="bg-transparent border-0 w-full" onBlur={(e) => handleTitleChange(e.target.value, item - 1)} />
                             </h1>
                             {
                               columns.pages[item - 1].items.map((item, i) => (

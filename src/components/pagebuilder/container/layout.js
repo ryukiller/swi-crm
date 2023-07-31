@@ -72,7 +72,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
   return (
     <>
       <div className="flex flex-row items-center justify-start gap-4 m-2 p-2 text-white">
-        <div className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={() => setIsPreview(!isPreview)}>{isPreview ? (<span className="flex flex-row items-center justify-center"><Eye className="mr-2" /> Preview On</span>) : (<span className="flex flex-row items-center justify-center"><EyeOff className="mr-2" /> Preview Off</span>)}</div>
+        <div className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={() => setIsPreview(!isPreview)}>{isPreview ? (<span className="flex flex-row items-center justify-center"><Eye className="mr-2" /> Preview is On</span>) : (<span className="flex flex-row items-center justify-center"><EyeOff className="mr-2" /> Preview is Off</span>)}</div>
         <button className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={createPDF} type="button">{isPreview ? (<span className="flex flex-row items-center justify-center"><FileDown className="mr-2" /> Scarica tutte le pagine</span>) : (<span className="flex flex-row items-center justify-center"><FileDown className="mr-2" /> Scarica questa pagina</span>)}</button>
       </div>
       {isPreview ? (
