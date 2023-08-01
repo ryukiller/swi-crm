@@ -1196,7 +1196,7 @@ const PageBuilder = ({ quote_id }) => {
                 </div>
                 <PageLayout columns={columns} CurrentPage={CurrentPage} editableText={editableText} textChange={handleTextChange}>
 
-                  <h1 className="bg-primary text-white uppercase p-3 py-2 my-6" onDoubleClick={() => (
+                  <h1 className="bg-primary text-white uppercase p-3 py-2 my-6 text-2xl" onDoubleClick={() => (
                     setTitle(columns.pages.find(
                       (item) => Number(item.id) === Number(CurrentPage)
                     ).title),
@@ -1214,7 +1214,6 @@ const PageBuilder = ({ quote_id }) => {
                         ).title
                       )
                     }
-
                   </h1>
                   <div
                     className={`bg-white min-h-screen w-full p-[1px] rounded-sm space-y-2 border-[1px] border-dashed  ${snapshot.isDraggingOver
@@ -1262,8 +1261,8 @@ const PageBuilder = ({ quote_id }) => {
                       {columns.pages[CurrentPage - 1].parents && columns.pages[CurrentPage - 1].parents.map(
                         (item, index) => (
                           <>
-                            <h1 className="bg-primary text-white uppercase p-3 py-2 my-6">
-                              <input type="text" value={columns.pages[item - 1].title} className="bg-transparent border-0 w-full" onBlur={(e) => handleTitleChange(e.target.value, item - 1)} />
+                            <h1 className="bg-primary text-white uppercase p-3 py-2 my-6 text-xl">
+                              {columns.pages[item - 1].title}
                             </h1>
                             {
                               columns.pages[item - 1].items.map((item, i) => (

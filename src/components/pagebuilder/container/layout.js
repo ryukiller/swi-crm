@@ -18,6 +18,33 @@ function getAllParents(obj, parents = []) {
   return parents;
 }
 
+function removeHtmlTags(inputString) {
+  return inputString.replace(/<.*?>/g, '');
+}
+
+function convertToSlug(inputString) {
+  const cleanedString = removeHtmlTags(inputString).toLowerCase();
+  const slug = cleanedString
+    .normalize("NFD") // Normalize accented characters into their base form + diacritics
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/[^\w\s-]/g, '') // Remove special characters except whitespace and hyphens
+    .trim()
+    .replace(/[-\s]+/g, '-'); // Replace spaces and hyphens with a single hyphen
+  return slug;
+}
+
+function getCurrentTimestamp() {
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const year = String(now.getFullYear()).slice(-2); // Extract the last two digits of the year
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+
+  const timestamp = `${day}-${month}-${year}-${hours}-${minutes}`;
+  return timestamp;
+}
+
 const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }) => {
 
   const createPDF = async () => {
@@ -35,8 +62,8 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
             elementsWithShiftedDownwardText.forEach(element => {
               // adjust styles or do whatever you want here
               element.classList.remove("py-2")
-              element.classList.add("pb-[16px]")
-              element.classList.add("pt-[4px]")
+              element.classList.add("pb-[18px]")
+              element.classList.add("pt-[0px]")
 
             });
           }
@@ -51,7 +78,8 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
       pdf.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
       count++
       if (count === pages.length) {
-        pdf.save("shipping_label.pdf");
+        const name = "preventivo-" + convertToSlug(editableText.companyName) + "-" + getCurrentTimestamp() + ".pdf"
+        pdf.save(name);
       }
     })
 
@@ -258,16 +286,16 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                           />
                         </div>
                       </div>
-                      <div className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding">
+                      <h1 className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding text-xl">
                         {item.title}
-                      </div>
+                      </h1>
                       {item.items.map((preview, index) => <PreviewRenderer key={index} item={preview} />)}
 
                       {item.parents.map((parents, index) => (
                         <div key={index}>
-                          <div className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding mt-10">
+                          <h1 className="bg-primary text-white uppercase px-3 py-2 my-6 fixpadding mt-10 text-xl">
                             {columns.pages[parents - 1].title}
-                          </div>
+                          </h1>
                           {columns.pages[parents - 1].items.map((previewinner, index) => (
                             <PreviewRenderer key={index} item={previewinner} />
                           ))}

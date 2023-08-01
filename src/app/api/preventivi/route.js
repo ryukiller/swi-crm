@@ -3,6 +3,8 @@ import pool from "../../../lib/db";
 import { NextResponse } from "next/server";
 import { verifyAccessToken } from "../../../lib/apiauth";
 
+import { v4 as uuidv4 } from 'uuid';
+
 export async function GET(req) {
   const unauthorizedResponse = await verifyAccessToken(req);
   if (unauthorizedResponse) {
@@ -42,6 +44,39 @@ export async function POST(req) {
   try {
     const connection = await pool.getConnection();
     const body = await req.json();
+
+
+
+    //Duplicate
+
+    const { id, duplicate } = body;
+    if (duplicate) {
+      if (!id) {
+        return NextResponse.json({ message: "Missing required fields" });
+      }
+
+      const newslug = uuidv4();
+
+      const results = await connection.query(
+        `
+        INSERT INTO preventivi (title, totale, state, cliente, categoria, note, slug, data)
+        SELECT CONCAT(title, ' Copia'), totale, state, cliente, categoria, note, ?, data
+        FROM preventivi
+        WHERE id = ?;
+       `,
+        [newslug, id]
+      );
+      connection.release();
+
+      if (results.affectedRows === 0) {
+        return NextResponse.json({ message: "Failed to duplicate" });
+      }
+
+      return NextResponse.json({ message: "Preventivo duplicato correttamenteData saved successfully" });
+    }
+
+    //Insert
+
     const { title, totale, state, cliente, categoria, note, slug, data } = body;
 
     if (!title || !totale || !cliente || !categoria || !slug) {

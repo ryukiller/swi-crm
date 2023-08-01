@@ -225,6 +225,30 @@ const List = ({ columns, items, refresh, setRefresh }) => {
       });
   };
 
+  const handleDuplicate = (id) => {
+    fetch("/api/preventivi", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `bearer ${session?.user.accessToken}`,
+      },
+      body: JSON.stringify({
+        id: id,
+        duplicate: true
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        // Here you can handle the response, like closing the modal, showing a success message, etc.
+        setRefresh(refresh + 1);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Here you can handle errors, like showing an error message, etc.
+      });
+  };
+
   const handleState = (id, state) => {
     fetch("/api/preventivi", {
       method: "PATCH",
@@ -426,6 +450,11 @@ const List = ({ columns, items, refresh, setRefresh }) => {
                       className="ml-2 cursor-pointer"
                     >
                       🗑️
+                    </span>
+                    <span
+                      onClick={() => handleDuplicate(item.id)}
+                      className="ml-2 cursor-pointer">
+                      👯
                     </span>
                   </td>
                   <td
