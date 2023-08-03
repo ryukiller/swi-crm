@@ -36,6 +36,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import RgEditor from "./container/Editor"
 import { ChevronDown, ChevronUp } from "lucide-react";
+import PreviewRenderer from "./container/PreviewRenderer";
+
 
 function itDate(dateStr) {
   const months = [
@@ -1265,7 +1267,10 @@ const PageBuilder = ({ quote_id }) => {
                             <h1 className="bg-primary text-white uppercase p-3 py-2 my-6 text-xl">
                               {columns.pages[item - 1].title}
                             </h1>
-                            {
+                            {columns.pages[item - 1].items.map((previewinner, index) => (
+                              <PreviewRenderer key={index} item={previewinner} />
+                            ))}
+                            {/* {
                               columns.pages[item - 1].items.map((item, i) => (
 
                                 <Draggable
@@ -1297,7 +1302,7 @@ const PageBuilder = ({ quote_id }) => {
                                   )}
                                 </Draggable>
                               ))
-                            }
+                            } */}
                           </>
                         )
                       )
