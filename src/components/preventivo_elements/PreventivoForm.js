@@ -105,6 +105,7 @@ const PreventivoForm = ({
               onChange={handleChange}
               required
             >
+              <option value="" disabled>-- Seleziona cliente --</option>
               {clients.map((client) => (
                 <option key={client.clienti} value={client.clienti}>
                   {client.name}
@@ -123,6 +124,7 @@ const PreventivoForm = ({
               onChange={handleChange}
               required
             >
+              <option value="" disabled>-- Seleziona categoria --</option>
               {categories.map((category) => (
                 <option key={category.categorie} value={category.categorie}>
                   {category.name}

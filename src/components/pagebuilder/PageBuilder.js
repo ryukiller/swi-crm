@@ -35,6 +35,7 @@ import { stateToHTML } from "draft-js-export-html";
 import { v4 as uuidv4 } from "uuid";
 
 import RgEditor from "./container/Editor"
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 function itDate(dateStr) {
   const months = [
@@ -993,8 +994,8 @@ const PageBuilder = ({ quote_id }) => {
     return (
       <nav className="-mx-3 space-y-6">
         <div className="space-y-3">
-          <label onClick={() => setPageList(!pageList)} className="p-3 cursor-pointer font-bold text-xs text-gray-500 uppercase dark:text-gray-400 bg-gray-200">
-            Pagine
+          <label onClick={() => setPageList(!pageList)} className="flex flex-row gap-2 items-start p-3 cursor-pointer font-bold text-xs text-gray-500 uppercase dark:text-gray-400 bg-gray-200">
+            Pagine {pageList ? <ChevronDown size={16} strokeWidth={1.5} /> : <ChevronUp size={16} strokeWidth={1.5} />}
           </label>
           {pageList &&
             columns.pages.map((page, index) => {
