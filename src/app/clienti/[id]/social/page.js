@@ -5,7 +5,12 @@ import MainLayout from "@/components/layout/MainLayout";
 import { signIn, useSession } from "next-auth/react";
 import axios from "axios";
 
-const socialTimeLine = [{
+import { getPosts, insertPost, insertFeed, insertContent, deletePost, deleteFeed, deleteContent, getFeeds, getContent } from './SocialContent';
+import ContentList from "./ContentList";
+
+
+
+const socialTimeLine2 = [{
     date: "12/08/2023",
     type: "Facebook Post",
     moodboardlink: "https://team.swi.it/mood/clientid/adja-adasd-sasd",
@@ -179,57 +184,65 @@ const Social = ({ params = {} }) => {
     const { data: session } = useSession();
     const { id } = params;
 
-    const getPosts = async () => {
-        const res = await axios.get(`/api/clienti/${id}/social`, {
-            params: {
-                id: id
-            },
-            headers: {
-                authorization: `bearer ${session?.user.accessToken}`,
-            }
-        })
+    const [socialTimeline, setSocialTimeline] = useState([]);
 
-        console.log(res)
-    }
+    const token = session?.user.accessToken;
+    const userid = session?.user.id
 
-    const insertPost = async () => {
-        const res = await axios.post(`/api/clienti/${id}/social`, {
-            data: {
-                client_id: id,
-                date: "12/07/2023",
-                type: "Facebook Post",
-                moodboardlink: "https://team.swi.it/mood/"
-            },
-            headers: {
-                authorization: `bearer ${session?.user.accessToken}`,
-            }
-        })
+    const social_timeline_id = 2;
 
-        console.log(res)
-    }
+    useEffect(() => {
+        const fetchData = async () => {
+            const posts = await getPosts(id, token);
+            console.log(posts)
+            const feed = await getFeeds(id, token, 1);
+            const content = await getContent(id, token, 1);
+
+            // Combine the data into the desired structure
+            const data = posts.map((post, index) => ({
+                ...post,
+                feed: feed[index], // or however you would map feeds to posts
+                content: content[index], // or however you would map content to posts
+            }));
+
+            setSocialTimeline(data);
+
+            console.log(data)
+        };
+
+        fetchData();
+    }, [id, token, social_timeline_id, userid]);
 
 
     return (
         <MainLayout className="w-full pt-0 p-12">
             <div>
+
                 <h1 className="text-xl font-bold text-center"
-                    onClick={() => getPosts()}
+                    onClick={() => getPosts(id, token)}
                 >Social Timeline</h1>
                 <h1 className="text-xl font-bold text-center"
-                    onClick={() => insertPost()}
+                    onClick={() => insertPost(id, token)}
                 >Insert Social Timeline</h1>
+                <h1 className="text-xl font-bold text-center"
+                    onClick={() => deletePost(id, token, 1)}
+                >Delete Timeline</h1>
+                <h1 className="text-xl font-bold text-center"
+                    onClick={() => insertFeed(id, token, social_timeline_id, userid)}
+                >Insert Feed</h1>
+                <h1 className="text-xl font-bold text-center"
+                    onClick={() => insertContent(id, token, social_timeline_id)}
+                >Insert Content</h1>
+
+
+                <ContentList json={socialTimeline} />
 
                 {session?.user ? (
                     <div className="">
-                        {id}
-                        {socialTimeLine.map((item, index) => {
-                            return (
-                                <div key={index}>
-                                    {item.date}
-                                </div>
-                            )
-                        })}
+                        ciao
                     </div>
+
+
 
                 ) : (
                     <>
