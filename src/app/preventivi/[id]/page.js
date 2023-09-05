@@ -18,7 +18,7 @@ function App({ params = {} }) {
     <MainLayout className="content pt-0 p-5">
       {session ? (
         <div className="App">
-          <PageBuilder quote_id={id} />
+          <PageBuilder quote_id={id} userToken={session.user.accessToken} />
         </div>
       ) : (
         <progress className="progress w-56"></progress>

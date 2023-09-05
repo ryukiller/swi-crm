@@ -12,6 +12,8 @@ const ClientiForm = ({
     phone_number: "",
     website: "",
     notes: "",
+    property: "",
+    facebookid: "",
   });
 
   useEffect(() => {
@@ -113,6 +115,34 @@ const ClientiForm = ({
               type="text"
               name="website"
               value={formState.website}
+              onChange={handleChange}
+              required
+              className="input input-bordered"
+            />
+          </div>
+          <div className="form-control my-2">
+            <label className="label align-middle justify-start gap-2">
+              <span className="label-text">Analytics Property ID</span>
+            </label>
+            <input
+              placeholder="Analytics Property ID"
+              type="text"
+              name="property"
+              value={formState.property}
+              onChange={handleChange}
+              required
+              className="input input-bordered"
+            />
+          </div>
+          <div className="form-control my-2">
+            <label className="label align-middle justify-start gap-2">
+              <span className="label-text">Facebook Account ID</span>
+            </label>
+            <input
+              placeholder="Facebook Account ID"
+              type="text"
+              name="facebookid"
+              value={formState.facebookid}
               onChange={handleChange}
               required
               className="input input-bordered"

@@ -7,6 +7,8 @@ import PreviewRenderer from "./PreviewRenderer";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
+import Upload from '@/components/Upload';
+
 function getAllParents(obj, parents = []) {
   obj.forEach(item => {
     if (item.parents && item.parents.length > 0) {
@@ -45,7 +47,7 @@ function getCurrentTimestamp() {
   return timestamp;
 }
 
-const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }) => {
+const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, userToken }) => {
 
   const createPDF = async () => {
     const pdf = new jsPDF("portrait", "pt", "a4");
@@ -97,6 +99,18 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
 
   const allParents = getAllParents(columns.pages);
 
+
+
+  const fileTypes = [".jpg", ".png", ".jpeg", ".webp"];
+  const uploadDir = "loghi";
+  const [editAvatar, setEditAvatar] = useState(false);
+
+  const handleUploadComplete = (imagePath) => {
+    const parsedPaths = JSON.parse(imagePath);
+    console.log(parsedPaths.images[0])
+    handleEditableTextChange('companyLogo', parsedPaths.images[0]);
+  };
+
   return (
     <>
       <div className="flex flex-row items-center justify-start gap-4 m-2 p-2 text-white">
@@ -118,7 +132,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
                     <div className="w-3/12 bg-[#f3f3f3ff] flex flex-col align-middle p-8 justify-between">
                       <div className="intenstazione">
                         <Image
-                          src="/imgs/logo-elledi.png"
+                          src={editableText.companyLogo ?? "/imgs/logo-elledi.png"}
                           width="80"
                           height="80"
                           alt="Logo Cliente"
@@ -312,13 +326,25 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange }
         <div id="pageBuilder" className="flex bg-white w-[1240px] h-[1754px] ">
           <div className="w-3/12 bg-[#f3f3f3ff] flex flex-col align-middle p-8 justify-between">
             <div className="intenstazione">
-              <Image
-                src="/imgs/logo-elledi.png"
-                width="80"
-                height="80"
-                alt="Logo Cliente"
-                className="py-5"
-              />
+              <div className="form-control my-2">
+                <div className="py-5" onClick={() => setEditAvatar(!editAvatar)}>
+                  <Image
+                    className="cursor-pointer border-transparent border hover:border-secondary"
+                    src={editableText.companyLogo}
+                    alt="cliente image"
+                    width="80"
+                    height="80"
+                  />
+                </div>
+                {editAvatar && (
+                  <Upload
+                    acceptedFileTypes={fileTypes}
+                    uploadDirectory={uploadDir}
+                    accessToken={userToken}
+                    onUploadComplete={handleUploadComplete}
+                  />
+                )}
+              </div>
               <EditableText
                 className="text-xs font-bold"
                 tagType="h2"

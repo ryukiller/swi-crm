@@ -5,7 +5,6 @@ import MainLayout from "@/components/layout/MainLayout";
 import ListaClienti from "../../components/ListaClienti";
 import { signIn, useSession } from "next-auth/react";
 
-
 const Clienti = () => {
     const { data: session } = useSession();
     const [clienti, setClienti] = useState([]);

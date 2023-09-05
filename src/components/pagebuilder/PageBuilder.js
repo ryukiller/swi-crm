@@ -359,7 +359,7 @@ const removeNestedItemById = (id, items) => {
     });
 };
 
-const PageBuilder = ({ quote_id }) => {
+const PageBuilder = ({ quote_id, userToken }) => {
   const [CurrentPage, setCurrentPage] = useState(1);
   const [isChildDragging, setIsChildDragging] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -404,7 +404,7 @@ const PageBuilder = ({ quote_id }) => {
       parents: []
     },
     pageInfo: {
-      companyLogo: "",
+      companyLogo: "/imgs/logo-elledi.png",
       companyName: "ELLEDI Spa",
       companyAddress: "Via Padergnone, 27 24050 Grassobbio (BG)",
       companyPiva: "P.iva IT01610020164",
@@ -1197,7 +1197,7 @@ const PageBuilder = ({ quote_id }) => {
                     </button>
                   </div>
                 </div>
-                <PageLayout columns={columns} CurrentPage={CurrentPage} editableText={editableText} textChange={handleTextChange}>
+                <PageLayout columns={columns} CurrentPage={CurrentPage} editableText={editableText} textChange={handleTextChange} userToken={userToken}>
 
                   <h1 className="bg-primary text-white uppercase p-3 py-2 my-6 text-2xl" onDoubleClick={() => (
                     setTitle(columns.pages.find(

@@ -63,7 +63,7 @@ export async function POST(req) {
   try {
     const connection = await pool.getConnection();
     const body = await req.json();
-    const { stato, name, email, phone_number, website, notes } = body;
+    const { stato, name, email, phone_number, website, notes, property, facebookid } = body;
 
     if (!name || !email || !phone_number || !website) {
       return NextResponse.json({ message: "Missing required fields" });
@@ -71,8 +71,8 @@ export async function POST(req) {
 
     const results = await connection.query(
       `
-        INSERT INTO clients (stato, name, email, phone_number, website, notes)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO clients (stato, name, email, phone_number, website, notes, property, facebookid)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ON DUPLICATE KEY UPDATE 
         stato = VALUES(stato),
         name = VALUES(name),
@@ -80,9 +80,11 @@ export async function POST(req) {
         phone_number = VALUES(phone_number),
         website = VALUES(website),
         notes = VALUES(notes),
+        property = VALUES(property),
+        facebookid = VALUES(facebookid),
         updated_at = CURRENT_TIMESTAMP;
        `,
-      [stato, name, email, phone_number, website, notes]
+      [stato, name, email, phone_number, website, notes, property, facebookid]
     );
     connection.release();
 

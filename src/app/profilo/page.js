@@ -8,14 +8,14 @@ import Upload from "../../components/Upload";
 import Image from "next/image";
 
 const reloadSession = () => {
-    const event = new Event("visibilitychange");
-    document.dispatchEvent(event);
-  };
+  const event = new Event("visibilitychange");
+  document.dispatchEvent(event);
+};
 
 function Profile({ user }) {
   const fileTypes = [".jpg", ".png", ".jpeg", ".webp"];
   const uploadDir = "avatars";
-  
+
 
   const [formData, setFormData] = useState({
     id: user.id,
@@ -57,7 +57,7 @@ function Profile({ user }) {
         console.log(data.message);
 
         reloadSession()
-        
+
       } else {
         console.log("Failed to update user");
       }
@@ -105,21 +105,21 @@ function Profile({ user }) {
             <span className="label-text">Avatar</span>
           </label>
           <div className="mb-5" onClick={() => setEditAvatar(!editAvatar)}>
-              <Image
+            <Image
               className="cursor-pointer rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 hover:ring-secondary"
-                src={formData.options.avatar}
-                alt="profile image"
-                width={60}
-                height={60}
-              />
-              
-            </div>
+              src={formData.options.avatar}
+              alt="profile image"
+              width={60}
+              height={60}
+            />
+
+          </div>
           {editAvatar ? (
             <><input
-            type="hidden"
-            name="options.avatar"
-            value={formData.options.avatar}
-          /></>
+              type="hidden"
+              name="options.avatar"
+              value={formData.options.avatar}
+            /></>
           ) : (
             <Upload
               acceptedFileTypes={fileTypes}

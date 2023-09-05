@@ -184,15 +184,34 @@
 
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
-const privateKeyPem = require('../../../credenziali/swi-crm-96da882ab1f1.json');
+const privateKeyPem = JSON.parse(process.env.GOOGLE_JSON) //require('credenziali/swi-crm-96da882ab1f1.json');
 
-export default async function handler(req, res) {
+
+
+import pool from '@/lib/db';
+import { NextResponse } from 'next/server';
+import { verifyAccessToken } from "@/lib/apiauth";
+
+export async function GET(req, { params }) {
+  // const unauthorizedResponse = await verifyAccessToken(req);
+  // if (unauthorizedResponse) {
+  //   return unauthorizedResponse;
+  // }
   // const auth = new google.auth.GoogleAuth({
   //   keyFile: privateKeyPem,
   //   scopes: ['https://www.googleapis.com/auth/analytics.readonly']
   // });
 
-  const { start, end } = req.query
+  //const { start, end } = params;
+
+  const { searchParams } = new URL(req.url)
+  const start = searchParams.get('start')
+  const end = searchParams.get('end')
+  const property = searchParams.get('property')
+
+  console.log(property)
+
+  console.log(start)
 
   const Difference_In_Time = new Date(start).getTime() - new Date(end).getTime();
   const Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -227,7 +246,19 @@ export default async function handler(req, res) {
     ],
     metrics: [
       {
+        name: 'sessions'
+      },
+      {
         name: 'screenPageViews'
+      },
+      {
+        name: 'activeUsers'
+      },
+      {
+        name: 'eventCount'
+      },
+      {
+        name: 'newUsers'
       }
     ],
     orderBys: [
@@ -268,13 +299,17 @@ export default async function handler(req, res) {
   };
 
   try {
-    const response = await analyticsData.properties.runReport({ property: 'properties/322852986', requestBody: request });
+    const response = await analyticsData.properties.runReport({ property: `properties/${property}`, requestBody: request });
     const rows = response.data.rows;
 
     const dates1 = rows.map(row => row.dimensionValues[0].value);
     const sessions1 = rows.map(row => row.metricValues[0].value);
+    const screenPageViews1 = rows.map(row => row.metricValues[1].value);
+    const activeUsers1 = rows.map(row => row.metricValues[2].value);
+    const eventCount1 = rows.map(row => row.metricValues[3].value);
+    const newUsers1 = rows.map(row => row.metricValues[4].value);
 
-    const response2 = await analyticsData.properties.runReport({ property: 'properties/322852986', requestBody: request2 });
+    const response2 = await analyticsData.properties.runReport({ property: `properties/${property}`, requestBody: request2 });
     const rows2 = response2.data.rows;
 
     const dates2 = rows2.map(row => row.dimensionValues[0].value);
@@ -283,7 +318,11 @@ export default async function handler(req, res) {
     const data = {
       row1: {
         dates: dates1,
-        sessions: sessions1
+        sessions: sessions1,
+        screenPageViews: screenPageViews1,
+        activeUsers: activeUsers1,
+        eventCount: eventCount1,
+        newUsers: newUsers1
       },
       row2: {
         dates: dates2,
@@ -292,10 +331,12 @@ export default async function handler(req, res) {
     }
 
     // Send the API response back to the client
-    res.status(200).json(data);
+    //res.status(200).json(data);
+    return NextResponse.json(data);
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'An error occurred while getting the pageviews.' });
+    //res.status(500).json({ message: 'An error occurred while getting the pageviews.' });
+    return NextResponse.json({ message: 'An error occurred while getting the pageviews.' });
   }
 }

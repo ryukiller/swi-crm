@@ -34,7 +34,7 @@ const ContentList = ({ json }) => {
                 json && json.map((item, index) => {
 
                     return (
-                        <>
+                        <div key={index}>
                             <div class="relative flex flex-row items-center justify-center gap-x-4 w-full">
 
                                 <div className='relative'>
@@ -50,7 +50,7 @@ const ContentList = ({ json }) => {
 
                             </div>
                             <div className="h-56 w-full"> </div>
-                        </>
+                        </div>
                     )
                 })
             }
