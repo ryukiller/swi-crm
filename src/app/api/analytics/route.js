@@ -184,7 +184,9 @@
 
 import { google } from 'googleapis';
 import { JWT } from 'google-auth-library';
-const privateKeyPem = JSON.parse(process.env.GOOGLE_JSON) //require('credenziali/swi-crm-96da882ab1f1.json');
+//const privateKeyPem = JSON.parse(process.env.GOOGLE_JSON) //require('credenziali/swi-crm-96da882ab1f1.json');
+const pvtKey = process.env.GOOGLE_KEY
+const serviceEmail = process.env.GOOGLE_SERVICE_EMAIL
 
 
 
@@ -222,8 +224,8 @@ export async function GET(req, { params }) {
   const compare = comparestart.toISOString().split('T')[0]
 
   const auth = new JWT({
-    email: privateKeyPem.client_email,
-    key: privateKeyPem.private_key,
+    email: serviceEmail,
+    key: pvtKey,
     scopes: ['https://www.googleapis.com/auth/analytics.readonly']
   });
 
