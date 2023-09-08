@@ -16,14 +16,10 @@ function Profile({ user }) {
   const fileTypes = [".jpg", ".png", ".jpeg", ".webp"];
   const uploadDir = "avatars";
 
-
   const [formData, setFormData] = useState({
     id: user.id,
     name: user.name,
-    options: {
-      avatar: user.options?.avatar || "",
-      descrizione: user.options?.descrizione || "",
-    },
+    options: { ...user.options },
   });
 
   const handleUploadComplete = (imagePath) => {

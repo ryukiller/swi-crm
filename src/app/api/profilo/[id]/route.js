@@ -18,7 +18,7 @@ export async function GET(req, context) {
 
     const results = await connection.query(
       `
-             SELECT id, name, options, email, role FROM users WHERE id = ?;
+             SELECT id, name, options, email, role, userChatId FROM users WHERE id = ?;
              `,
       [id]
     );
