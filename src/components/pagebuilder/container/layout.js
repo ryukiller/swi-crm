@@ -106,9 +106,8 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
   const [editAvatar, setEditAvatar] = useState(false);
 
   const handleUploadComplete = (imagePath) => {
-    const parsedPaths = JSON.parse(imagePath);
-    console.log(parsedPaths.images[0])
-    handleEditableTextChange('companyLogo', parsedPaths.images[0]);
+
+    handleEditableTextChange('companyLogo', imagePath);
   };
 
   return (

@@ -24,13 +24,13 @@ function Profile({ user }) {
 
   const handleUploadComplete = (imagePath) => {
     // Handle the image path, e.g., save it to the database
-    const parsedPaths = JSON.parse(imagePath);
-    //console.log('Image path:', parsedPaths.images[0]);
+    // const parsedPaths = JSON.parse(imagePath);
+    // console.log('Image path:', parsedPaths.images[0]);
     setFormData((prevFormData) => ({
       ...prevFormData,
       options: {
         ...prevFormData.options,
-        avatar: parsedPaths.images[0],
+        avatar: imagePath,
       },
     }));
   };

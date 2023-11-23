@@ -39,7 +39,7 @@ const RgEditor = ({ content, onEditChange, onlyText }) => {
   );
 
   useEffect(() => {
-    const blocksFromHTML = onlyText ? convertFromHTML(stripHTMLTags(content)) : convertFromHTML(content);
+    const blocksFromHTML = onlyText ? convertFromHTML(stripHTMLTags(content ? content : ' ')) : convertFromHTML(content ? content : ' ');
     const state = ContentState.createFromBlockArray(
       blocksFromHTML.contentBlocks,
       blocksFromHTML.entityMap
