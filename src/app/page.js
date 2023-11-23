@@ -1,8 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from './page.module.css'
 import "rsuite/dist/rsuite.min.css";
 
 
@@ -11,7 +8,6 @@ import ZenTimeChart from '../components/charts/ZenTimeChart'
 import { DateRangePicker } from 'rsuite';
 
 
-const inter = Inter({ subsets: ['latin'] })
 
 function formatDate(date) {
   // Array of month names, shorten to 3 characters
