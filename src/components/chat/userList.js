@@ -62,11 +62,11 @@ const UserList = ({ token, currentUser, currentChat }) => {
                                     person.name.split(' ').map((item, index, array) => {
                                         if (index === 0) {
                                             // Take first letter of the first name
-                                            return <span className=" font-bold">{item.charAt(0)}. </span>;
+                                            return <span key={index} className=" font-bold">{item.charAt(0)}. </span>;
                                         } else if (index === array.length - 1) {
                                             // Take the last name and truncate if needed
                                             let lastName = item.length > 8 ? item.slice(0, 8) + '...' : item;
-                                            return <span>{lastName}</span>;
+                                            return <span key={index}>{lastName}</span>;
                                         } else {
                                             // Skip middle names
                                             return null;

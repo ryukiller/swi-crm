@@ -85,7 +85,7 @@ export default function LogIn() {
                     <p className="mt-10 text-center text-sm text-gray-500">
                         Non hai un account?{' '}
                         <a href="/register" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-                            Creane uno e richiedine l'attivazione al reparto WEB
+                            Creane uno e richiedine {`l'attivazione`} al reparto WEB
                         </a>
                     </p>
                 </div>
