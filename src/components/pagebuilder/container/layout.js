@@ -47,7 +47,7 @@ function getCurrentTimestamp() {
   return timestamp;
 }
 
-const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, userToken }) => {
+const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, userToken, liftIsPreview }) => {
 
   const createPDF = async () => {
     const pdf = new jsPDF("portrait", "pt", "a4");
@@ -98,6 +98,10 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
   const [isPreview, setIsPreview] = useState(false);
 
   const allParents = getAllParents(columns.pages);
+
+  useEffect(() => {
+    liftIsPreview(isPreview)
+  }, [isPreview])
 
 
 

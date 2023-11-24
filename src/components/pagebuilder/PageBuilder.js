@@ -367,6 +367,13 @@ const PageBuilder = ({ quote_id, userToken }) => {
   const [title, setTitle] = useState('')
   const [editingTitle, setEditingTitle] = useState(false)
 
+  const [preview, setPreview] = useState(false)
+
+  const isPreview = (value) => {
+    console.log("valore mio", value)
+    setPreview(value)
+  }
+
   useEffect(() => {
     if (editingId) {
       setIsChildDragging(true);
@@ -975,7 +982,7 @@ const PageBuilder = ({ quote_id, userToken }) => {
 
 
 
-  const Sidebar = () => {
+  const Sidebar = ({ prev }) => {
 
     const [selectedParents, setSelectedParents] = useState([]);
 
@@ -990,6 +997,8 @@ const PageBuilder = ({ quote_id, userToken }) => {
     };
 
     const [pageList, setPageList] = useState(true)
+
+    console.log('here prev', prev)
 
 
 
@@ -1080,7 +1089,8 @@ const PageBuilder = ({ quote_id, userToken }) => {
 
         </div>
 
-        {reusableComponents.map((category) => (
+        {!prev && reusableComponents.map((category) => (
+
 
           <div key={category.category} className="space-y-3">
             <label className="p-3 font-bold text-xs text-gray-500 uppercase dark:text-gray-400 bg-gray-200">
@@ -1109,6 +1119,8 @@ const PageBuilder = ({ quote_id, userToken }) => {
                 </Draggable>
               ))}
           </div>
+
+
         ))}
       </nav>
     );
@@ -1138,6 +1150,8 @@ const PageBuilder = ({ quote_id, userToken }) => {
   };
 
 
+
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex">
@@ -1151,7 +1165,7 @@ const PageBuilder = ({ quote_id, userToken }) => {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <Sidebar />
+                  <Sidebar prev={preview} />
                   {provided.placeholder}
                 </div>
               </>
@@ -1197,7 +1211,7 @@ const PageBuilder = ({ quote_id, userToken }) => {
                     </button>
                   </div>
                 </div>
-                <PageLayout columns={columns} CurrentPage={CurrentPage} editableText={editableText} textChange={handleTextChange} userToken={userToken}>
+                <PageLayout columns={columns} CurrentPage={CurrentPage} editableText={editableText} textChange={handleTextChange} userToken={userToken} liftIsPreview={isPreview}>
 
                   <h1 className="bg-primary text-white uppercase p-3 py-2 my-6 text-2xl" onDoubleClick={() => (
                     setTitle(columns.pages.find(
