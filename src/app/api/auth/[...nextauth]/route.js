@@ -1,7 +1,7 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const url = process.env.SITE || "http://localhost:3000"
+const url = process.env.SITE || "http://localhost:3001"
 
 export const authOptions = {
   secret: process.env.JWT_SECRET,
