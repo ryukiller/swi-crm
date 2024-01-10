@@ -1,7 +1,7 @@
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const url = process.env.SITE || "http://localhost:3001"
+const url = process.env.SITE || "http://localhost:3000"
 
 export const authOptions = {
   secret: process.env.JWT_SECRET,
@@ -78,9 +78,4 @@ export const authOptions = {
 
 const handler = NextAuth(authOptions);
 
-export const GET = handler.handlers.GET;
-export const POST = handler.handlers.POST;
-
-export const runtime = "edge";
-
-//export { handler as GET, handler as POST };
+export { handler as GET, handler as POST };
