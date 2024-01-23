@@ -95,7 +95,7 @@ const Elenco = ({ content, onTodosChange, isEdit, ...props }) => {
             <ul
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className={`list-disc ${isEdit ? "" : "ml-5"}`}
+              className={`list-none ${isEdit ? "" : "ml-0"}`}
             >
               {todos.map((todo, index) => (
                 <Draggable
@@ -115,11 +115,14 @@ const Elenco = ({ content, onTodosChange, isEdit, ...props }) => {
                         background: snapshot.isDragging ? "lightblue" : "",
                       }}
                       className={`${isEdit
-                          ? "flex flex-row items-start justify-start bg-slate-200 p-2 m-1 border-dashed border border-slate-800"
-                          : ""
+                        ? "flex flex-row items-start justify-start bg-slate-200 p-2 m-1 border-dashed border border-slate-800"
+                        : "flex items-center justify-start"
                         }`}
                     >
-                      <div className="flex flex-row mr-2">
+                      <div className={`${isEdit
+                        ? "flex flex-row mr-2"
+                        : "w-[5px] h-[5px] bg-black rounded-full m-[10px] mybullet"
+                        }`}>
                         {isEdit && (
                           <>
                             {editingId === todo.id && (

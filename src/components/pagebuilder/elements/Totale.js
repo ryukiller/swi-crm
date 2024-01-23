@@ -51,7 +51,7 @@ const Totale = ({ content, isEdit, onSaveEdits, ...props }) => {
           <div className="flex flex-row items-center justify-between my-2">
             <div></div>
             <div className=""></div>
-            <div>
+            <div className="flex flex-col items-end justify-start">
               <div className="flex flex-row items-center"><RgEditor onEditChange={(htmlContent) => handleEditChange('title', htmlContent)} content={editingValue.title} onlyText={true} /> : € <RgEditor onEditChange={(htmlContent) => handleEditChange('prezzo', htmlContent)} content={editingValue.prezzo} onlyText={true} /> + <RgEditor onEditChange={(htmlContent) => handleEditChange('ivainclusa', htmlContent)} content={editingValue.ivainclusa} onlyText={true} /></div>
               <p className="text-right text-xs font-light"><RgEditor onEditChange={(htmlContent) => handleEditChange('info', htmlContent)} content={editingValue.info} onlyText={true} /></p>
             </div>
@@ -61,7 +61,7 @@ const Totale = ({ content, isEdit, onSaveEdits, ...props }) => {
         <div className="flex flex-row items-center justify-between my-2">
           <div></div>
           <div className=""></div>
-          <div>
+          <div className="flex flex-col items-end justify-start">
             <div>{editingValue.title} : € {editingValue.prezzo} + {editingValue.ivainclusa}</div>
             <p className="text-right text-xs font-light">{editingValue.info}</p>
           </div>

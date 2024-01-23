@@ -128,3 +128,15 @@ a {
 .public-DraftStyleDefault-block {
   margin: 0 !important;
 }
+
+html {
+  font-family: var(--font-kanit);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: var(--font-unbounded);
+}

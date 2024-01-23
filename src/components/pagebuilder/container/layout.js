@@ -9,6 +9,7 @@ import { jsPDF } from "jspdf";
 
 import Upload from '@/components/Upload';
 
+
 function getAllParents(obj, parents = []) {
   obj.forEach(item => {
     if (item.parents && item.parents.length > 0) {
@@ -49,6 +50,84 @@ function getCurrentTimestamp() {
 
 const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, userToken, liftIsPreview }) => {
 
+  function resizeImageToDisplaySize(img, callback) {
+    const fullImage = document.createElement('img');
+    fullImage.src = img.src;
+    fullImage.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Get the computed style of the image to account for padding/margin
+      const style = window.getComputedStyle(img);
+      const width = img.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+      const height = img.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+
+      // Maintain aspect ratio
+      const aspectRatio = img.naturalWidth / img.naturalHeight;
+      let newWidth, newHeight;
+
+      if (img.naturalWidth > img.naturalHeight) {
+        // Image is wider than it is tall
+        newWidth = width;
+        newHeight = width / aspectRatio;
+      } else {
+        // Image is taller than it is wide
+        newHeight = height;
+        newWidth = height * aspectRatio;
+      }
+
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+
+      const imageType = img.src.includes('.png') ? 'image/png' : 'image/jpeg';
+
+      // If PNG, fill the canvas with a transparent background
+      if (imageType === 'image/png') {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0)'; // Transparent background
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      ctx.drawImage(fullImage, 0, 0, newWidth, newHeight);
+
+      canvas.toBlob(blob => {
+        if (!blob) {
+          console.error('Failed to convert canvas to blob.');
+          return;
+        }
+        const resizedImg = document.createElement('img');
+        resizedImg.src = URL.createObjectURL(blob);
+        resizedImg.onload = () => {
+          callback(resizedImg);
+        };
+      }, imageType, 1); // Adjust quality as needed
+    }
+    fullImage.onerror = () => {
+      console.error('Failed to load image:', img.src);
+    };
+  }
+
+
+
+  function resizeAllImagesAndProceed() {
+    const images = document.querySelectorAll('.canvaspage img');
+    const resizePromises = Array.from(images).map(img => {
+      return new Promise(resolve => {
+        resizeImageToDisplaySize(img, resizedImg => {
+          img.parentNode.replaceChild(resizedImg, img);
+          resolve();
+        });
+      });
+    });
+
+    // When all images are resized, proceed to create the PDF
+    Promise.all(resizePromises).then(() => {
+      createPDF(); // Call your function to create the PDF
+    });
+  }
+
+
+
+
   const createPDF = async () => {
     const pdf = new jsPDF("portrait", "pt", "a4");
     const pages = document.querySelectorAll(".canvaspage");
@@ -68,6 +147,28 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
               element.classList.add("pt-[0px]")
 
             });
+            const textSmClass = el.querySelectorAll('.text-sm');
+            textSmClass.forEach(element => {
+              // adjust styles or do whatever you want here
+              element.classList.remove("text-sm")
+              element.classList.add("text-lg")
+
+            });
+
+            const mybullet = el.querySelectorAll('.mybullet');
+            mybullet.forEach(element => {
+              // adjust styles or do whatever you want here
+              //element.classList.remove("m-[10px]")
+              element.classList.add("mb-[-10px]")
+
+            });
+
+            // const ulliClass = el.querySelectorAll('ul li');
+            // textSmClass.forEach(element => {
+            //   // adjust styles or do whatever you want here
+            //   element.classList.add("pt-[0px]")
+
+            // });
           }
         });
       const img = data.toDataURL("image/png");
@@ -118,7 +219,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
     <>
       <div className="flex flex-row items-center justify-start gap-4 m-2 p-2 text-white">
         <div className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={() => setIsPreview(!isPreview)}>{isPreview ? (<span className="flex flex-row items-center justify-center"><Eye className="mr-2" /> Preview is On</span>) : (<span className="flex flex-row items-center justify-center"><EyeOff className="mr-2" /> Preview is Off</span>)}</div>
-        <button className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={createPDF} type="button">{isPreview ? (<span className="flex flex-row items-center justify-center"><FileDown className="mr-2" /> Scarica tutte le pagine</span>) : (<span className="flex flex-row items-center justify-center"><FileDown className="mr-2" /> Scarica questa pagina</span>)}</button>
+        <button className="bg-slate-700 cursor-pointer rounded-md p-2" onClick={resizeAllImagesAndProceed} type="button">{isPreview ? (<span className="flex flex-row items-center justify-center"><FileDown className="mr-2" /> Scarica tutte le pagine</span>) : (<span className="flex flex-row items-center justify-center"><FileDown className="mr-2" /> Scarica questa pagina</span>)}</button>
       </div>
       {isPreview ? (
 
@@ -136,14 +237,14 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
                       <div className="intenstazione">
                         <Image
                           src={editableText.companyLogo ?? "/imgs/logo-elledi.png"}
-                          width="80"
-                          height="80"
+                          width="400"
+                          height="400"
                           alt="Logo Cliente"
-                          className="py-5"
+                          className="py-5 w-full"
                         />
 
                         <EditableText
-                          className="text-xs font-bold"
+                          className="text-lg font-bold"
                           tagType="h2"
                           initialText={editableText.companyName}
                           handleEditableTextChange={handleEditableTextChange}
@@ -151,7 +252,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
                         />
 
                         <EditableText
-                          className="font-light text-xs mb-3"
+                          className="font-light text-lg mb-3"
                           tagType="p"
                           initialText={editableText.companyAddress}
                           handleEditableTextChange={handleEditableTextChange}
@@ -159,7 +260,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
                         />
 
                         <EditableText
-                          className="font-light text-xs mb-5"
+                          className="font-light text-lg mb-5"
                           tagType="p"
                           initialText={editableText.companyPiva}
                           handleEditableTextChange={handleEditableTextChange}
@@ -167,9 +268,9 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
                           inside="PIVA: "
                         />
 
-                        <p className="text-xs">alla C.A.</p>
+                        <p className="text-lg">alla C.A.</p>
                         <EditableText
-                          className="text-xs font-bold"
+                          className="text-lg font-bold"
                           tagType="p"
                           initialText={editableText.contactPerson}
                           handleEditableTextChange={handleEditableTextChange}
@@ -209,7 +310,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
 
                               return (
                                 page.state && (
-                                  <li key={index} className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[item.id - 1].parents.includes(page.id) || item.id === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
+                                  <li key={index} className={`my-10 group cursor-pointer hover:text-black text-lg ${columns.pages[item.id - 1].parents.includes(page.id) || item.id === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
                                     {page.title}
                                     <br />
                                     {page.subtitle}
@@ -233,12 +334,12 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
                         <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
                         <h3 className="uppercase text-lg font-bold">Contatti</h3>
                         <p className="text-sm font-light">www.swi.it</p>
-                        <h4 className="font-bold text-xs mt-5">SWI Agency</h4>
-                        <p className="font-light text-xs mb-5">
+                        <h4 className="font-bold text-lg mt-5">SWI Agency</h4>
+                        <p className="font-light text-lg mb-5">
                           Via Piave, 15/17, 20027 Rescaldina MI <br />
-                          Tel. 0331 320873
+                          Tel. 0331 320873 <br />
+                          Tel. 0331 636278
                           <br />
-                          Fax. 0331 636278 <br />
                           Mail info@swi.it
                         </p>
                         <Image
@@ -332,11 +433,11 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
               <div className="form-control my-2">
                 <div className="py-5" onClick={() => setEditAvatar(!editAvatar)}>
                   <Image
-                    className="cursor-pointer border-transparent border hover:border-secondary"
+                    className="cursor-pointer border-transparent border hover:border-secondary w-full"
                     src={editableText.companyLogo}
                     alt="cliente image"
-                    width="80"
-                    height="80"
+                    width="400"
+                    height="400"
                   />
                 </div>
                 {editAvatar && (
@@ -349,7 +450,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
                 )}
               </div>
               <EditableText
-                className="text-xs font-bold"
+                className="text-lg font-bold"
                 tagType="h2"
                 initialText={editableText.companyName}
                 handleEditableTextChange={handleEditableTextChange}
@@ -357,7 +458,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
               />
 
               <EditableText
-                className="font-light text-xs mb-3"
+                className="font-light text-lg mb-3"
                 tagType="p"
                 initialText={editableText.companyAddress}
                 handleEditableTextChange={handleEditableTextChange}
@@ -365,7 +466,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
               />
 
               <EditableText
-                className="font-light text-xs mb-5"
+                className="font-light text-lg mb-5"
                 tagType="p"
                 initialText={editableText.companyPiva}
                 handleEditableTextChange={handleEditableTextChange}
@@ -373,9 +474,9 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
                 inside="PIVA: "
               />
 
-              <p className="text-xs">alla C.A.</p>
+              <p className="text-lg">alla C.A.</p>
               <EditableText
-                className="text-xs font-bold"
+                className="text-lg font-bold"
                 tagType="p"
                 initialText={editableText.contactPerson}
                 handleEditableTextChange={handleEditableTextChange}
@@ -416,7 +517,7 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
 
                     return (
                       page.state && (
-                        <li key={index} className={`my-10 group cursor-pointer hover:text-black text-xs ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
+                        <li key={index} className={`my-10 group cursor-pointer hover:text-black text-lg ${columns.pages[CurrentPage - 1].parents.includes(page.id) || CurrentPage === page.id ? 'text-black' : 'text-gray-500'} relative flex flex-row items-center justify-start`}>
                           {page.title}
                           <br />
                           {page.subtitle}
@@ -440,12 +541,12 @@ const PageLayout = ({ children, columns, CurrentPage, editableText, textChange, 
               <div className="w-12 h-[2px] bg-primary my-2 ml-[-10px]"></div>
               <h3 className="uppercase text-lg font-bold">Contatti</h3>
               <p className="text-sm font-light">www.swi.it</p>
-              <h4 className="font-bold text-xs mt-5">SWI Agency</h4>
-              <p className="font-light text-xs mb-5">
+              <h4 className="font-bold text-lg mt-5">SWI Agency</h4>
+              <p className="font-light text-lg mb-5">
                 Via Piave, 15/17, 20027 Rescaldina MI <br />
-                Tel. 0331 320873
+                Tel. 0331 320873 <br />
+                Tel. 0331 636278
                 <br />
-                Fax. 0331 636278 <br />
                 Mail info@swi.it
               </p>
               <Image
