@@ -1,27 +1,8 @@
 # netlify.toml
 
-[build]
-  # Next.js build command
-  command = "npm run build"
-  # Directory to publish (build output)
-  publish = ".next"
-  # Functions directory
-  functions = "netlify/functions"
-
-[[redirects]]
-  # Redirects for Next.js pages (excluding API routes)
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
 [[redirects]]
   # Handle API routes (used by NextAuth)
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
 
-[[redirects]]
-  # Handle Next.js static files and assets
-  from = "/_next/static/*"
-  to = "/_next/static/:splat"
-  status = 200
