@@ -1,9 +1,11 @@
 // list all preventivi
 "use client";
-import { useState, useEffect } from "react";
-import MainLayout from "@/components/layout/MainLayout";
-import List from "../../components/List";
+
 import { signIn, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+
+import List from "../../components/List";
+import MainLayout from "@/components/layout/MainLayout";
 
 const Preventivi = () => {
   const { data: session } = useSession();

@@ -1,11 +1,18 @@
 'use client'
-import { signIn } from "next-auth/react";
+
 import React, { useRef } from "react";
+import { useFormState, useFormStatus } from 'react-dom';
+
 import Image from "next/image";
+import { authenticate } from '@/app/lib/actions';
+
+//import { signIn } from "next-auth/react";
 
 export default function LogIn() {
 
-    const userEmail = useRef("");
+    const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+
+    /*const userEmail = useRef("");
     const pass = useRef("");
 
     const onSubmit = async () => {
@@ -15,7 +22,7 @@ export default function LogIn() {
             redirect: true,
             callbackUrl: "/",
         });
-    };
+    };*/
 
     return (
         <>
@@ -34,14 +41,14 @@ export default function LogIn() {
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" action="#" method="POST">
+                    <form className="space-y-6" action={dispatch} method="POST">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Email
                             </label>
                             <div className="mt-2">
                                 <input
-                                    onChange={(e) => (userEmail.current = e.target.value)}
+                                    //onChange={(e) => (userEmail.current = e.target.value)}
                                     id="email"
                                     name="email"
                                     type="email"
@@ -60,7 +67,7 @@ export default function LogIn() {
                             </div>
                             <div className="mt-2">
                                 <input
-                                    onChange={(e) => (pass.current = e.target.value)}
+                                    //onChange={(e) => (pass.current = e.target.value)}
                                     id="password"
                                     name="password"
                                     type="password"
@@ -72,13 +79,21 @@ export default function LogIn() {
                         </div>
 
                         <div>
-                            <button
-                                onClick={onSubmit}
-                                type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            
+
+                            <LoginButton />
+
+                            <div
+                                className="flex h-8 items-end space-x-1"
+                                aria-live="polite"
+                                aria-atomic="true"
                             >
-                                Entra
-                            </button>
+                                {errorMessage && (
+                                    <>
+                                        <p className="text-sm text-red-500">{errorMessage}</p>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </form>
 
@@ -92,4 +107,14 @@ export default function LogIn() {
             </div>
         </>
     )
+}
+
+function LoginButton() {
+    const { pending } = useFormStatus();
+
+    return (
+        <button className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" aria-disabled={pending}>
+             Entra
+        </button>
+    );
 }
