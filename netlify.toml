@@ -4,7 +4,7 @@
   # Next.js build command
   command = "npm run build"
   # Directory to publish (build output)
-  publish = "out"
+  publish = ".next"
   # Functions directory
   functions = "netlify/functions"
 
