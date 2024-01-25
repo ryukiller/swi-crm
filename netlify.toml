@@ -1,8 +1,0 @@
-# netlify.toml
-
-[[redirects]]
-  # Handle API routes (used by NextAuth)
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
