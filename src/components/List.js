@@ -76,7 +76,7 @@ const SelectFilters = ({ title, items, handleCheckboxChange, onAddCategory }) =>
                 </div>
               ))}
 
-            <div className="flex gap-2 mt-2">
+            {title === 'categorie' && <div className="flex gap-2 mt-2">
               <input
                 type="text"
                 className="input input-bordered input-xs flex-1 text-black"
@@ -85,7 +85,7 @@ const SelectFilters = ({ title, items, handleCheckboxChange, onAddCategory }) =>
                 onChange={(e) => setNewCategory(e.target.value)}
               />
               <button className="btn btn-xs btn-success" onClick={handleAddClick}><PlusIcon size={14} className="text-white" /></button>
-            </div>
+            </div>}
           </div>
         </div>
       </details>
