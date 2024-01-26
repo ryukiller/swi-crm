@@ -41,6 +41,9 @@ export const authConfig = {
 
             return session;
         },
+        redirect: async (url, baseUrl) => {
+            return Promise.resolve('/preventivi')
+        }
     },
     providers: [], // Add providers with an empty array for now
 }
