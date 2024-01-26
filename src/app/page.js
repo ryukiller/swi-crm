@@ -187,7 +187,7 @@ export default function Home() {
 
   return (
     <MainLayout className="mx-10" >
-      <main className='w-full'>
+      <main className='w-full max-w-[1600px]'>
         <div className="flex flex-row items-start justify-start">
           <div className="stats stats-vertical shadow w-[10%]">
             <div className="stat">
