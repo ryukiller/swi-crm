@@ -3,6 +3,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import PreventivoModal from "./preventivo_elements/PreventivoModal";
 import { useSession } from "next-auth/react";
+import { PlusIcon } from "lucide-react";
 
 function formatDate(timestamp) {
   const date = new Date(timestamp);
@@ -39,7 +40,17 @@ function formatDate(timestamp) {
   );
 }
 
-const SelectFilters = ({ title, items, handleCheckboxChange }) => {
+const SelectFilters = ({ title, items, handleCheckboxChange, onAddCategory }) => {
+
+  const [newCategory, setNewCategory] = useState('');
+
+  const handleAddClick = () => {
+    if (newCategory.trim()) {
+      onAddCategory(newCategory);
+      setNewCategory(''); // Reset the input field after adding
+    }
+  };
+
   return (
     <>
       <details className="dropdown">
@@ -64,6 +75,17 @@ const SelectFilters = ({ title, items, handleCheckboxChange }) => {
                   />
                 </div>
               ))}
+
+            <div className="flex gap-2 mt-2">
+              <input
+                type="text"
+                className="input input-bordered input-xs flex-1 text-black"
+                placeholder="Aggiungi categoria"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+              <button className="btn btn-xs btn-success" onClick={handleAddClick}><PlusIcon size={14} className="text-white" /></button>
+            </div>
           </div>
         </div>
       </details>
@@ -76,6 +98,7 @@ const SelectFilters = ({ title, items, handleCheckboxChange }) => {
 
 const List = ({ columns, items, refresh, setRefresh }) => {
   const [search, setSearch] = useState("");
+  const [addedCat, setAddedCat] = useState(false);
   const [filteredItems, setFilteredItems] = useState(items);
   const [sort, setSort] = useState({ field: "", order: "asc" });
   const { data: session } = useSession();
@@ -88,9 +111,25 @@ const List = ({ columns, items, refresh, setRefresh }) => {
     setSelects(data);
   };
 
+  const addCategory = async (title) => {
+    const res = await fetch("/api/preventivi/categories", {
+      method: "POST",
+      headers: {
+        authorization: `bearer ${session?.user.accessToken}`,
+      },
+      body: JSON.stringify({ title }), // Assuming you are sending the title in the body
+    });
+    const data = await res.json();
+
+    if (data && data.message === "Data saved successfully") {
+      setAddedCat(true); // Set addedCat to true to trigger the useEffect
+    }
+  };
+
   useEffect(() => {
     fetchselects();
-  }, []);
+    setAddedCat(false); // Reset addedCat to allow for subsequent additions
+  }, [addedCat]);
 
   const [selectedItems, setSelectedItems] = useState({
     clienti: [],
@@ -301,6 +340,7 @@ const List = ({ columns, items, refresh, setRefresh }) => {
               title="categorie"
               items={selects[1]}
               handleCheckboxChange={handleCheckboxChange}
+              onAddCategory={addCategory}
             />
           )}
         </div>
