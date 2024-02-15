@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react';
 import RgEditor from '../Editor';
 import { FileEdit, Save } from 'lucide-react';

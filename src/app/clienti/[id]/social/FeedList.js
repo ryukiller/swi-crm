@@ -1,3 +1,4 @@
+'use client'
 import { useState, Fragment } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { Flame, Frown, Heart, Smile, ThumbsUp, XCircle, CheckCircle, Paperclip } from 'lucide-react'

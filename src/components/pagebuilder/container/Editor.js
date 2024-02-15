@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useMemo, useRef, useState } from "react";
 import { EditorState, convertFromHTML, ContentState } from "draft-js";
 import Editor, { createEditorStateWithText } from "@draft-js-plugins/editor";

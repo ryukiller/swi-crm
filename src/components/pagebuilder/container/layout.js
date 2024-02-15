@@ -1,3 +1,4 @@
+'use client'
 import { Eye, EyeOff, FileDown } from 'lucide-react'
 import { useEffect, useState } from "react";
 

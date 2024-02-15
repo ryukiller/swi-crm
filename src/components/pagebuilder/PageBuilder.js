@@ -1,23 +1,3 @@
-/*
-TODO:
- - fix the edit button
- - fix the load when the data is fetching and when thers no data on api
- - add delete component functionality
-
- - layout standard components
-  - sidebar:
-    - intestazione
-    - logo cliente
-    - dettaglio servizi offerti
-    - footer contatti swi
-  - main
-    - intestazione
-    - titolo
-    - componenti per modellare il contenuto
-
-  - refine the structure and the menus
-
-*/
 "use client";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -27,14 +7,11 @@ import { ContentState, EditorState } from "draft-js";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import React, { useEffect, useState } from "react";
 
-import { Editor } from "react-draft-wysiwyg";
-import { IncrementalCache } from "next/dist/server/lib/incremental-cache";
 import PageLayout from "./container/layout";
 import axios from "axios";
 import { stateToHTML } from "draft-js-export-html";
 import { v4 as uuidv4 } from "uuid";
 
-import RgEditor from "./container/Editor"
 import { ChevronDown, ChevronUp } from "lucide-react";
 import PreviewRenderer from "./container/PreviewRenderer";
 
@@ -94,14 +71,6 @@ const ComponentRenderer = ({ item, index, innerListItems, isEdit }) => {
     item.content = newEdits;
   };
 
-  // const [paragrafo, setPparagrafo] = useState(item.content);
-
-  // const handleTitleChange = (newTitle) => {
-  //   setTitle(newTitle);
-  //   setContent(newTitle);
-  //   item.content = newTitle;
-  // };
-
   const [editorState, setEditorState] = useState(
     EditorState.createWithContent(ContentState.createFromText(mycontent))
   );
@@ -118,27 +87,7 @@ const ComponentRenderer = ({ item, index, innerListItems, isEdit }) => {
   };
 
   const renderComponent = () => {
-    // if (isEditMode) {
-    //   return (
-    //     <div>
-    //       {editorState && (
-    //         <Editor
-    //           editorState={editorState}
-    //           toolbarClassName="toolbarClassName"
-    //           wrapperClassName="wrapperClassName"
-    //           editorClassName="editorClassName"
-    //           onEditorStateChange={handleEditorStateChange}
-    //         />
-    //       )}
-    //       <button
-    //         className="bg-green-500 text-white font-bold py-1 px-2 rounded mt-2"
-    //         onClick={saveContent}
-    //       >
-    //         Save
-    //       </button>
-    //     </div>
-    //   );
-    // }
+
     switch (item.type) {
       case "button":
         return (

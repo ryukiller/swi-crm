@@ -1,3 +1,4 @@
+'use state'
 import { useState } from 'react';
 import ClientiForm from './ClientiForm';
 

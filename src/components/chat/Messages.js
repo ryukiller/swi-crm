@@ -1,4 +1,5 @@
 
+'use state'
 import moment from 'moment';  // Importing moment for time formatting
 import { useRef, useEffect } from 'react';
 
